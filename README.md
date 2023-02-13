@@ -3,7 +3,7 @@
 麻雀基本ライブラリ
 
 このリポジトリは [`@kobalab/majiang-core`](https://github.com/kobalab/majiang-core) 及び [`@tanimodori/mj-core`](https://github.com/tanimodori/mj-core) のフォークである。
-また、 [`@akashic-games/akashic-engine`] に最適化された麻雀ライブラリである。
+また、 [`@akashic-games/akashic-engine`](https://github.com/akashic-games/akashic-engine) に最適化された麻雀ライブラリである。
 
 ## インストール
 
@@ -16,6 +16,10 @@ $ akashic install @negima1072/akashic-mj-core
 ```javascript
 import { Game, Shoupai } from '@tanimodori/mj-core';
 ```
+
+## 変更点
+
+akashic-engineに適応させるために、Math.randomの置き換えやTypeScriptへの対応などを行った。
 
 ## 提供機能
 
