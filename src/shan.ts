@@ -6,6 +6,9 @@ import { Pai } from "data";
 import { Rule } from "rule";
 import { Shoupai } from "shoupai";
 
+/**
+ * 牌山を表現するクラス
+ */
 export class Shan {
   /**
    * ドラ表示牌が **`p`** の場合のドラを返す。

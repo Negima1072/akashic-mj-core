@@ -2,6 +2,16 @@
  * Mahjong.Rule
  */
 
+/**
+ * ルール決定パラメータ
+ * @remarks
+ * ルールの詳細を決めるパラメータをキーとしてもつ連想配列。
+ * @example
+ * 以下の呼び出しで取得できる。
+ * ```javascript
+ * const rule = Majiang.rule();
+ * ```
+ */
 export interface Rule{
   /* 点数関連 */
   /**
@@ -203,6 +213,11 @@ export interface Rule{
   enableRoundUpMangan: boolean;
 }
 
+/**
+ * ルールを生成する。
+ * @param params カスタムルール
+ * @returns ルール
+ */
 export function rule(params?: Partial<Rule>): Rule {
   let rule: Rule = {
     originPoint: 25000,

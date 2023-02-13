@@ -12,6 +12,9 @@ type Bingpai = {
   z: number[];
 };
 
+/**
+ * 手牌を表現するクラス
+ */
 export class Shoupai {
   /**
    * **`p`** が{@link Pai | 牌}として正しければそのまま返す。正しくなければ `null` を返す。
