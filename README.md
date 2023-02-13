@@ -14,12 +14,12 @@ $ akashic install @negima1072/akashic-mj-core
 ## 使用法
 
 ```javascript
-import { Game, Shoupai } from '@tanimodori/mj-core';
+import { Game, Shoupai } from '@negima1072/mj-core';
 ```
 
 ## 変更点
 
-akashic-engineに適応させるために、Math.randomの置き換えやTypeScriptへの対応などを行った。
+[`@akashic-games/akashic-engine`](https://github.com/akashic-games/akashic-engine) に適応させるために、`Math.random`の置き換えやTypeScriptへの対応などを行った。
 
 ## 提供機能
 
