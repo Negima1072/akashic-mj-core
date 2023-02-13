@@ -1,29 +1,20 @@
-# @tanimodori/mj-core
+# @negima1072/akashic-mj-core
 
 麻雀基本ライブラリ
 
-このリポジトリは [`@kobalab/majiang-core`](https://github.com/kobalab/majiang-core) のフォークである。現在は TypeScript 型定義ファイルや ESM 支援を提供している。後には TypeScript へ移行予定です。
+このリポジトリは [`@kobalab/majiang-core`](https://github.com/kobalab/majiang-core) 及び [`@tanimodori/mj-core`](https://github.com/tanimodori/mj-core) のフォークである。
+また、 [`@akashic-games/akashic-engine`] に最適化された麻雀ライブラリである。
 
 ## インストール
 
 ```sh
-$ npm i @tanimodori/mj-core
+$ akashic install @negima1072/akashic-mj-core
 ```
 
 ## 使用法
 
-`CommonJS`:
-
 ```javascript
-const Majiang = require('@tanimodori/mj-core');
-```
-
-`ESModule`:
-
-```javascript
-import Majiang from '@tanimodori/mj-core';
-// or
-import { Shoupai } from '@tanimodori/mj-core';
+import { Game, Shoupai } from '@tanimodori/mj-core';
 ```
 
 ## 提供機能
@@ -38,13 +29,14 @@ import { Shoupai } from '@tanimodori/mj-core';
 | ``Majiang.Board``   | 卓情報を更新するクラス       |
 | ``Majiang.Player``  | 対局者を実現する基底クラス           |
 
-- [API仕様](https://github.com/Tanimodori/mj-core/wiki)
+- [API仕様](https://github.com/Negima1072/mj-core/wiki)
 
 ## ライセンス
 
-[MIT](https://github.com/Tanimodori/mj-core/blob/master/LICENSE)
+[MIT](https://github.com/Negima1072/akashic-mj-core/blob/master/LICENSE)
 
 ## 作者
 
 - [Satoshi Kobayashi](https://github.com/kobalab)
 - [Tanimodori](https://github.com/Tanimodori)
+- [Negima1072](https://github.com/Negima1072)
