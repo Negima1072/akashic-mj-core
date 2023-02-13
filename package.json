@@ -1,0 +1,30 @@
+{
+  "name": "@negima1072/akashic-mj-core",
+  "version": "0.1.0",
+  "description": "Akashic Mahjong Core Library",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prepare": "npm run clean && npm run build",
+    "clean": "rimraf lib && rimraf spec/build",
+    "build": "tsc -p ./"
+  },
+  "author": "Negima1072",
+  "contributors": [
+    "Satoshi Kobayashi (https://github.com/kobalab)",
+    "Tanimodori (https://github.com/Tanimodori)"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@akashic/akashic-engine": "^3.10.0",
+    "@types/node": "^18.13.0",
+    "rimraf": "^4.1.2",
+    "typescript": "^4.9.5"
+  }
+}
