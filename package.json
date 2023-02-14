@@ -13,7 +13,10 @@
   "scripts": {
     "prepare": "npm run clean && npm run build",
     "clean": "rimraf lib && rimraf spec/build",
-    "build": "tsc -p ./"
+    "build": "tsc -p ./",
+    "eslint": "eslint src/**/*.ts",
+    "eslint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write 'src/**/*.{js,ts,json}'"
   },
   "author": "Negima1072",
   "contributors": [
@@ -23,7 +26,13 @@
   "license": "MIT",
   "devDependencies": {
     "@akashic/akashic-engine": "^3.10.0",
+    "@akashic/eslint-config": "^1.1.1",
     "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
   }

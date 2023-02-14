@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": [
+    "@akashic/eslint-config",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "parserOptions": {
+      "project": "tsconfig.json",
+      "sourceType": "module"
+  }
+}
