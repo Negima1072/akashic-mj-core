@@ -36,7 +36,7 @@ export abstract class Player {
    * @param msg {@link GameMessage}
    * @param callback 呼び出し関数
    */
-  action(msg: GameMessage, callback: ReplyCallback): void{
+  action(msg: GameMessage, callback?: ReplyCallback): void{
     this._callback = callback;
     if      ("kaiju" in msg)    this.kaiju  (msg.kaiju);
     else if ("qipai" in msg)    this.qipai  (msg.qipai);
@@ -57,7 +57,7 @@ export abstract class Player {
   _id: number;
 
   /**
-   * {@link Player.action} 呼び出し時に指定された応答送信用関数。
+   * {@link Player["action"]} 呼び出し時に指定された応答送信用関数。
    */
   _callback: ReplyCallback;
 

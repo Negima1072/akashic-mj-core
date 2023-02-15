@@ -1,5 +1,7 @@
 /** 通知メッセージ */
 
+import { Player } from "player";
+import { Game } from "game";
 import {
   Dapai,
   Fulou,

@@ -6,6 +6,7 @@ import { Huleyi, Menzi, Pai, Yibanyi, Yiman } from "data";
 import { rule, Rule } from "rule";
 import { Shan } from "shan";
 import { Bingpai, Shoupai } from "shoupai";
+import * as Util from "./";
 
 /**
  * 和了点計算に使用する場況情報
@@ -55,32 +56,32 @@ export interface HuleParam {
      * `0`: リーチなし、`1`: リーチ、`2`: ダブルリーチ。
      * @defaultValue `0`
      */
-    lizhi: number;
+    lizhi?: number;
     /**
      * 一発のとき `true`。
      * @defaultValue `false`
      */
-    yifa: boolean;
+    yifa?: boolean;
     /**
      * 槍槓のとき `true`。
      * @defaultValue `false`
      */
-    qianggang: boolean;
+    qianggang?: boolean;
     /**
      * 嶺上開花のとき `true`。
      * @defaultValue `false`
      */
-    lingshang: boolean;
+    lingshang?: boolean;
     /**
      * `0`: ハイテイなし、`1`: ハイテイツモ、`2`: ハイテイロン。
      * @defaultValue `0`
      */
-    haidi: number;
+    haidi?: number;
     /**
      * `0`: 天和/地和なし、`1`: 天和、`2`: 地和。
      * @defaultValue `0`
      */
-    tianhu: number;
+    tianhu?: number;
   };
   /**
    * ドラ表示{@link Pai | 牌}の配列。

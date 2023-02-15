@@ -1,4 +1,4 @@
-import { Paipu } from "./data";
+import { Moda, Paipu } from "./data";
 
 /**
  * {@link BoardInfo | 卓情報}を描画するクラス
@@ -19,9 +19,9 @@ export interface View {
   /**
    * 牌譜が更新するときに呼び出された関数
    * 画面を更新するためと仮定する
-   * @param paipu {@link Paipu | 牌譜}
+   * @param paipu {@link Moda | 牌譜の模打情報}
    */
-  update(paipu: Paipu): void;
+  update(paipu: Moda): void;
 
   /**
    * 終局ときに呼び出された関数
