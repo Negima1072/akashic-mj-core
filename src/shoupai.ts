@@ -4,7 +4,7 @@
 
 import { Menzi, Pai, Paizi } from "data";
 
-type Bingpai = {
+export type Bingpai = {
   _: number;
   m: number[];
   p: number[];
