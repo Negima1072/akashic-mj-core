@@ -10,3 +10,5 @@ export { Rule, rule } from "./rule";
 export { Shoupai } from "./shoupai";
 export { Shan } from "./shan";
 export { He } from "./he";
+
+export * from "./util";
