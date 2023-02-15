@@ -10,5 +10,11 @@ export { Rule, rule } from "./rule";
 export { Shoupai } from "./shoupai";
 export { Shan } from "./shan";
 export { He } from "./he";
+export { Board } from "./board";
 
 export * from "./util";
+
+export * from "./data";
+export * from "./message";
+export * from "./boardInfo";
+export * from "./view";

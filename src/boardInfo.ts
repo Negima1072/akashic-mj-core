@@ -1,7 +1,30 @@
-import { Paipu } from "./data";
+import { Pai, Paipu } from "./data";
 import { He } from "./he";
 import { Shan } from "./shan";
 import { Shoupai } from "./shoupai";
+
+export class BoardShan {
+
+  paishu: number;
+
+  baopai: Pai[];
+
+  fubaopai?: Pai[]; 
+
+  constructor(baopai: Pai) {
+    this.paishu = 136 - 13 * 4 - 14;
+    this.baopai = [baopai];
+  }
+
+  zimo(p: Pai): string {
+    this.paishu--;
+    return p || "_";
+  }
+
+  kaigang(baopai: Pai): void {
+    this.baopai.push(baopai);
+  }
+}
 
 /**
  * 描画の際に使用する卓に関する情報を表現するオブジェクト
@@ -52,7 +75,7 @@ export interface BoardInfo {
   /**
    * その局の牌山を表す {@link Shan} のインスタンス。
    */
-  shan: Shan;
+  shan: BoardShan;
 
   /**
    * その局の対局者の手牌を表す {@link Shoupai} のインスタンスの配列。その局の東家から順に並べる。
