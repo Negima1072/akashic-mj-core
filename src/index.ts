@@ -7,10 +7,11 @@
  */
 
 export { Rule, rule } from "./rule";
-export { Shoupai } from "./shoupai";
+export { Shoupai, Bingpai } from "./shoupai";
 export { Shan } from "./shan";
 export { He } from "./he";
-export { Board } from "./board";
+export { Board, BoardKaijuParams } from "./board";
+export { Player, ReplyCallback } from "./player";
 
 export * from "./util";
 
