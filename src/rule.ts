@@ -46,7 +46,7 @@ export interface Rule{
    * * `2`: 現物喰い替えもあり
    * @defaultValue `0`
    */
-  kuitanAllowLevel: number;
+  kuikaeAllowLevel: number;
 
   /* 局数関連 */
   /**
@@ -163,7 +163,7 @@ export interface Rule{
    * ツモ番なしリーチあり
    * @defaultValue `false`
    */
-  enableReachWithoutTurn: boolean;
+  enableRiichiWithoutTurn: boolean;
   /**
    * リーチ後暗槓許可レベル
    * @remarks
@@ -228,7 +228,7 @@ export function rule(params?: Partial<Rule>): Rule {
       s: 1
     },
     enableKuitan: true,
-    kuitanAllowLevel: 0,
+    kuikaeAllowLevel: 0,
     gameCount: 2,
     enableInterruptedGame: true,
     enableNagashi: true,
@@ -244,7 +244,7 @@ export function rule(params?: Partial<Rule>): Rule {
     enableKandora: true,
     enableKanUra: true,
     enableKandoraAfterRide: true,
-    enableReachWithoutTurn: false,
+    enableRiichiWithoutTurn: false,
     ankanAfterReachAllowLevel: 2,
     enableYakumanComposite: true,
     enableDoubleYakuman: true,
