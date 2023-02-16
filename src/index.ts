@@ -12,6 +12,7 @@ export { Shan } from "./shan";
 export { He } from "./he";
 export { Board, BoardKaijuParams } from "./board";
 export { Player, ReplyCallback } from "./player";
+export { Game, JiejuCallback } from "./game";
 
 export * from "./util";
 

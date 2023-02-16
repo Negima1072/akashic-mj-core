@@ -21,7 +21,7 @@ export interface View {
    * 画面を更新するためと仮定する
    * @param paipu {@link Moda | 牌譜の模打情報}
    */
-  update(paipu: Moda): void;
+  update(paipu?: Moda): void;
 
   /**
    * 終局ときに呼び出された関数

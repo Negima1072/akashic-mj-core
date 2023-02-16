@@ -29,7 +29,7 @@ export class BoardShan {
 /**
  * 描画の際に使用する卓に関する情報を表現するオブジェクト
  */
-export interface BoardInfo {
+export interface BoardInfo<B = BoardShan> {
   /**
    * 対局名を示す文字列。
    * @remarks {@link Paipu.title}と同じ。
@@ -73,9 +73,9 @@ export interface BoardInfo {
   defen: number[];
 
   /**
-   * その局の牌山を表す {@link Shan} のインスタンス。
+   * その局の牌山を表す {@link B} のインスタンス。
    */
-  shan: BoardShan;
+  shan: B;
 
   /**
    * その局の対局者の手牌を表す {@link Shoupai} のインスタンスの配列。その局の東家から順に並べる。
