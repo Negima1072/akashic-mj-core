@@ -18,7 +18,7 @@ export class BoardShan {
     this.baopai = [baopai];
   }
 
-  zimo(p: Pai): string {
+  zimo(p?: Pai): string {
     this.paishu--;
     return p || "_";
   }
