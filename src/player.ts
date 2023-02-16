@@ -2,11 +2,11 @@
  * Mahjong.Player
  */
 
-import { Board } from "board";
-import type { BoardShan } from "boardInfo";
-import type { Menzi, Pai, Paipu } from "data";
-import { Game } from "game";
-import type { He } from "he";
+import { Board } from "./board";
+import type { BoardShan } from "./boardInfo";
+import type { Menzi, Pai, Paipu } from "./data";
+import { Game } from "./game";
+import type { He } from "./he";
 import type {
   DapaiGameMessage,
   FulouGameMessage,
@@ -20,9 +20,9 @@ import type {
   PlayerMessage,
   QipaiGameMessage,
   ZimoGameMessage,
-} from "message";
-import type { Rule } from "rule";
-import type { Shoupai } from "shoupai";
+} from "./message";
+import type { Rule } from "./rule";
+import type { Shoupai } from "./shoupai";
 import * as Util from "./util";
 
 /**
@@ -307,7 +307,7 @@ export abstract class Player {
    * @returns ポン可能な{@link Menzi | 面子}の配列。
    */
   get_peng_mianzi(shoupai: Shoupai, p: Pai): Menzi[] {
-    return Game.get_peng_mianzi(this._rule, shoupai, p, this.shan.paishu);
+    return Game.get_peng_mianzi(shoupai, p, this.shan.paishu);
   }
 
   /**

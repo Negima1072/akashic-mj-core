@@ -2,8 +2,8 @@
  * Mahjong.Board
  */
 
-import type { BoardInfo} from "boardInfo";
-import { BoardShan } from "boardInfo";
+import type { BoardInfo} from "./boardInfo";
+import { BoardShan } from "./boardInfo";
 import type {
   Dapai,
   Fulou,
@@ -15,8 +15,8 @@ import type {
   Pingju,
   Qipai,
   Zimo,
-} from "data";
-import { He } from "he";
+} from "./data";
+import { He } from "./he";
 import type {
   DapaiGameMessage,
   FulouGameMessage,
@@ -28,8 +28,8 @@ import type {
   KaijuGameMessage,
   QipaiGameMessage,
   ZimoGameMessage,
-} from "message";
-import { Shoupai } from "shoupai";
+} from "./message";
+import { Shoupai } from "./shoupai";
 
 export interface Board extends BoardInfo {}
 

@@ -2,8 +2,8 @@
  * Mahjong.He
  */
 
-import type { Menzi, Pai } from "data";
-import { Shoupai } from "shoupai";
+import type { Menzi, Pai } from "./data";
+import { Shoupai } from "./shoupai";
 
 /**
  * 捨て牌を表現するクラス

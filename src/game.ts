@@ -2,9 +2,9 @@
  * Mahjong.Game
  */
 
-import type { BoardInfo } from "boardInfo";
-import type { Hule, Huleyi, Menzi, Moda, Pai, Paipu, Paizi } from "data";
-import { He } from "he";
+import type { BoardInfo } from "./boardInfo";
+import type { Hule, Huleyi, Menzi, Moda, Pai, Paipu, Paizi } from "./data";
+import { He } from "./he";
 import type {
   DapaiPlayerMessage,
   EmptyPlayerMessage,
@@ -12,15 +12,15 @@ import type {
   GameMessage,
   GangPlayerMessage,
   PlayerMessage,
-} from "message";
-import type { Player } from "player";
-import type { Rule} from "rule";
-import { rule as makeRule } from "rule";
-import { Shan } from "shan";
-import type { Bingpai} from "shoupai";
-import { Shoupai } from "shoupai";
-import type { View } from "view";
+} from "./message";
+import type { Player } from "./player";
+import type { Rule} from "./rule";
+import { rule as makeRule } from "./rule";
+import { Shan } from "./shan";
+import type { Bingpai} from "./shoupai";
+import { Shoupai } from "./shoupai";
 import * as Util from "./util";
+import type { View } from "./view";
 
 /** 対局終了時に呼ばれた関数 */
 export type JiejuCallback = (paipu: Paipu) => void;

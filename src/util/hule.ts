@@ -2,11 +2,11 @@
  * Mahjong.Util.Hule
  */
 
-import type { Huleyi, Menzi, Pai, Yibanyi, Yiman } from "data";
-import type { Rule } from "rule";
-import { rule } from "rule";
-import { Shan } from "shan";
-import type { Bingpai, Shoupai } from "shoupai";
+import type { Huleyi, Menzi, Pai, Yibanyi, Yiman } from "../data";
+import type { Rule } from "../rule";
+import { rule } from "../rule";
+import { Shan } from "../shan";
+import type { Bingpai, Shoupai } from "../shoupai";
 
 /**
  * 和了点計算に使用する場況情報

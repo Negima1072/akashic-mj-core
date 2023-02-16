@@ -2,8 +2,8 @@
  * Mahjong.Util.Xiangting
  */
 
-import type { Pai } from "data";
-import type { Bingpai, Shoupai } from "shoupai";
+import type { Pai } from "../data";
+import type { Bingpai, Shoupai } from "../shoupai";
 
 function _xiangting(m: number, d: number, g: number, j?: boolean): number {
   const n = j ? 4 : 5;

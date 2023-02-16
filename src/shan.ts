@@ -2,9 +2,9 @@
  * Mahjong.Shan
  */
 
-import type { Pai } from "data";
-import type { Rule } from "rule";
-import { Shoupai } from "shoupai";
+import type { Pai } from "./data";
+import type { Rule } from "./rule";
+import { Shoupai } from "./shoupai";
 
 /**
  * 牌山を表現するクラス
