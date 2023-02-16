@@ -682,7 +682,8 @@ function get_hupai(
     return [];
   }
   function ziyise(): Huleyi<string>[] {
-    if (hudi.n_zipai === mianzi.length) return [{ name: "字一色", fanshu: "*" }];
+    if (hudi.n_zipai === mianzi.length)
+      return [{ name: "字一色", fanshu: "*" }];
     return [];
   }
   function lvyise(): Huleyi<string>[] {
