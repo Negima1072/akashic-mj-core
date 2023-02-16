@@ -8,10 +8,10 @@ describe("Mahjong.He", () => {
   describe("constructor()", () => {
     test("インスタンスが生成できること", () => {
       expect(new Mahjong.He()).toBeDefined()
-    })
+    });
     test("インスタンス生成時は捨て牌の長さが0であること", () => {
       expect(new Mahjong.He()._pai.length).toEqual(0);
-    })
+    });
   });
 
   describe("dapai(p)", () => {
