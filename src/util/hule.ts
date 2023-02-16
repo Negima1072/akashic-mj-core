@@ -2,7 +2,7 @@
  * Mahjong.Util.Hule
  */
 
-import { Huleyi, Menzi, Pai, Yibanyi, Yiman } from "data";
+import type { Huleyi, Menzi, Pai, Yibanyi, Yiman } from "data";
 import { rule, Rule } from "rule";
 import { Shan } from "shan";
 import { Bingpai, Shoupai } from "shoupai";
