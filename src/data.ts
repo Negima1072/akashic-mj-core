@@ -1,4 +1,8 @@
 /**
+ * Mahjong.Data
+ */
+
+/**
  * 単独の牌を表す文字列
  *
  * @remarks

@@ -1,3 +1,7 @@
+/**
+ * Mahjong.BoardInfo
+ */
+
 import type { Pai, Paipu } from "./data";
 import type { He } from "./he";
 import type { Shoupai } from "./shoupai";

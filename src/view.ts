@@ -1,3 +1,7 @@
+/**
+ * Mahjong.View
+ */
+
 import type { Moda, Paipu } from "./data";
 
 /**

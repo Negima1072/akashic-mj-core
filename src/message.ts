@@ -1,5 +1,8 @@
-/** 通知メッセージ */
+/**
+ * Mahjong.Message
+ */
 
+/** 通知メッセージ */
 import type {
   Dapai,
   Fulou,
