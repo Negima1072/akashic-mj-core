@@ -7,7 +7,20 @@ import { BoardInfo, BoardShan } from "boardInfo";
 import { Menzi, Pai, Paipu } from "data";
 import { Game } from "game";
 import { He } from "he";
-import { DapaiGameMessage, FulouGameMessage, GameMessage, GangGameMessage, GangzimoGameMessage, HuleGameMessage, KaigangGameMessage, KaijuGameMessage, PingjuGameMessage, PlayerMessage, QipaiGameMessage, ZimoGameMessage } from "message";
+import {
+  DapaiGameMessage,
+  FulouGameMessage,
+  GameMessage,
+  GangGameMessage,
+  GangzimoGameMessage,
+  HuleGameMessage,
+  KaigangGameMessage,
+  KaijuGameMessage,
+  PingjuGameMessage,
+  PlayerMessage,
+  QipaiGameMessage,
+  ZimoGameMessage,
+} from "message";
 import { Rule } from "rule";
 import { Shan } from "shan";
 import { Shoupai } from "shoupai";
@@ -27,7 +40,7 @@ export abstract class Player {
   /**
    * **`_model`** に空の卓情報をもつインスタンスを生成する。
    */
-  constructor(){
+  constructor() {
     this._model = new Board();
   }
 
@@ -36,19 +49,19 @@ export abstract class Player {
    * @param msg {@link GameMessage}
    * @param callback 呼び出し関数
    */
-  action(msg: GameMessage, callback?: ReplyCallback): void{
+  action(msg: GameMessage, callback?: ReplyCallback): void {
     this._callback = callback;
-    if      ("kaiju" in msg)    this.kaiju  (msg.kaiju);
-    else if ("qipai" in msg)    this.qipai  (msg.qipai);
-    else if ("zimo" in msg)     this.zimo   (msg.zimo);
-    else if ("dapai" in msg)    this.dapai  (msg.dapai);
-    else if ("fulou" in msg)    this.fulou  (msg.fulou);
-    else if ("gang" in msg)     this.gang   (msg.gang);
-    else if ("gangzimo" in msg) this.zimo   (msg.gangzimo, true)
-    else if ("kaigang" in msg)  this.kaigang(msg.kaigang);
-    else if ("hule" in msg)     this.hule   (msg.hule);
-    else if ("pingju" in msg)   this.pingju (msg.pingju);
-    else if ("jieju" in msg)    this.jieju  (msg.jieju);
+    if ("kaiju" in msg) this.kaiju(msg.kaiju);
+    else if ("qipai" in msg) this.qipai(msg.qipai);
+    else if ("zimo" in msg) this.zimo(msg.zimo);
+    else if ("dapai" in msg) this.dapai(msg.dapai);
+    else if ("fulou" in msg) this.fulou(msg.fulou);
+    else if ("gang" in msg) this.gang(msg.gang);
+    else if ("gangzimo" in msg) this.zimo(msg.gangzimo, true);
+    else if ("kaigang" in msg) this.kaigang(msg.kaigang);
+    else if ("hule" in msg) this.hule(msg.hule);
+    else if ("pingju" in msg) this.pingju(msg.pingju);
+    else if ("jieju" in msg) this.jieju(msg.jieju);
   }
 
   /**
@@ -101,7 +114,7 @@ export abstract class Player {
    * @param kaiju {@link KaijuGameMessage}
    * @internal
    */
-  kaiju(kaiju: KaijuGameMessage["kaiju"]): void{
+  kaiju(kaiju: KaijuGameMessage["kaiju"]): void {
     this._id = kaiju.id;
     this._rule = kaiju.rule;
     this._model.kaiju(kaiju);
@@ -113,7 +126,7 @@ export abstract class Player {
    * @param qipai {@link QipaiGameMessage}
    * @internal
    */
-  qipai(qipai: QipaiGameMessage["qipai"]): void{
+  qipai(qipai: QipaiGameMessage["qipai"]): void {
     this._model.qipai(qipai);
     this._menfeng = this._model.menfeng(this._id);
     this._diyizimo = true;
@@ -128,7 +141,7 @@ export abstract class Player {
    * @param gangzimo 真の場合は槓自摸を表す。
    * @internal
    */
-  zimo(zimo: ZimoGameMessage["zimo"], gangzimo?: boolean): void{
+  zimo(zimo: ZimoGameMessage["zimo"], gangzimo?: boolean): void {
     this._model.zimo(zimo);
     if (gangzimo) this._n_gang++;
     if (this._callback) this.action_zimo(zimo, gangzimo);
@@ -139,7 +152,7 @@ export abstract class Player {
    * @param dapai {@link DapaiGameMessage}
    * @internal
    */
-  dapai(dapai: DapaiGameMessage["dapai"]): void{
+  dapai(dapai: DapaiGameMessage["dapai"]): void {
     if (dapai.l == this._menfeng) {
       if (!this.shoupai.lizhi) this._neng_rong = true;
     }
@@ -163,7 +176,7 @@ export abstract class Player {
    * @param fulou {@link FulouGameMessage}
    * @internal
    */
-  fulou(fulou: FulouGameMessage["fulou"]): void{
+  fulou(fulou: FulouGameMessage["fulou"]): void {
     this._model.fulou(fulou);
 
     if (this._callback) this.action_fulou(fulou);
@@ -176,7 +189,7 @@ export abstract class Player {
    * @param gang {@link GangGameMessage}
    * @internal
    */
-  gang(gang: GangGameMessage["gang"]): void{
+  gang(gang: GangGameMessage["gang"]): void {
     this._model.gang(gang);
 
     if (this._callback) this.action_gang(gang);
@@ -194,7 +207,7 @@ export abstract class Player {
    * @param kaigang {@link KaigangGameMessage}
    * @internal
    */
-  kaigang(kaigang: KaigangGameMessage["kaigang"]): void{
+  kaigang(kaigang: KaigangGameMessage["kaigang"]): void {
     this._model.kaigang(kaigang);
   }
 
@@ -203,7 +216,7 @@ export abstract class Player {
    * @param hule {@link HuleGameMessage}
    * @internal
    */
-  hule(hule: HuleGameMessage["hule"]): void{
+  hule(hule: HuleGameMessage["hule"]): void {
     this._model.hule(hule);
     if (this._callback) this.action_hule(hule);
   }
@@ -213,7 +226,7 @@ export abstract class Player {
    * @param pingju {@link PingjuGameMessage}
    * @internal
    */
-  pingju(pingju: PingjuGameMessage["pingju"]): void{
+  pingju(pingju: PingjuGameMessage["pingju"]): void {
     this._model.pingju(pingju);
     if (this._callback) this.action_pingju(pingju);
   }
@@ -223,7 +236,7 @@ export abstract class Player {
    * @param jieju {@link Paipu | 牌譜}
    * @internal
    */
-  jieju(paipu: Paipu): void{
+  jieju(paipu: Paipu): void {
     this._model.jieju(paipu);
     this._paipu = paipu;
     if (this._callback) this.action_jieju(paipu);
@@ -234,7 +247,7 @@ export abstract class Player {
    * @returns 自身の{@link Shoupai | 手牌}
    * @internal
    */
-  get shoupai(): Shoupai{
+  get shoupai(): Shoupai {
     return this._model.shoupai[this._menfeng];
   }
 
@@ -243,7 +256,7 @@ export abstract class Player {
    * @returns 自身の{@link He | 捨て牌}
    * @internal
    */
-  get he(): He{
+  get he(): He {
     return this._model.he[this._menfeng];
   }
 
@@ -252,7 +265,7 @@ export abstract class Player {
    * @returns 互換のオブジェクト{@link Shan | 牌山}
    * @internal
    */
-  get shan(): BoardShan{
+  get shan(): BoardShan {
     return this._model.shan;
   }
 
@@ -260,11 +273,9 @@ export abstract class Player {
    * 自身の手牌がテンパイしている場合、和了牌の一覧を返す。
    * @returns 和了{@link Pai | 牌}の配列。テンパイしていない場合は空の配列を返す。
    */
-  get hulepai(): Pai[]{
+  get hulepai(): Pai[] {
     return (
-      (Util.xiangting(this.shoupai) == 0 &&
-        Util.tingpai(this.shoupai)) ||
-      []
+      (Util.xiangting(this.shoupai) == 0 && Util.tingpai(this.shoupai)) || []
     );
   }
 
@@ -274,7 +285,7 @@ export abstract class Player {
    * @param shoupai {@link Shoupai}
    * @returns 打牌可能な{@link Pai | 牌}の配列。
    */
-  get_dapai(shoupai: Shoupai): Pai[]{
+  get_dapai(shoupai: Shoupai): Pai[] {
     return Game.get_dapai(this._rule, shoupai);
   }
 
@@ -285,13 +296,8 @@ export abstract class Player {
    * @param p {@link Pai | 牌}
    * @returns チー可能な{@link Menzi | 面子}の配列。
    */
-  get_chi_mianzi(shoupai: Shoupai, p: Pai): Menzi[]{
-    return Game.get_chi_mianzi(
-      this._rule,
-      shoupai,
-      p,
-      this.shan.paishu
-    );
+  get_chi_mianzi(shoupai: Shoupai, p: Pai): Menzi[] {
+    return Game.get_chi_mianzi(this._rule, shoupai, p, this.shan.paishu);
   }
 
   /**
@@ -301,13 +307,8 @@ export abstract class Player {
    * @param p {@link Pai | 牌}
    * @returns ポン可能な{@link Menzi | 面子}の配列。
    */
-  get_peng_mianzi(shoupai: Shoupai, p: Pai): Menzi[]{
-    return Game.get_peng_mianzi(
-      this._rule,
-      shoupai,
-      p,
-      this.shan.paishu
-    );
+  get_peng_mianzi(shoupai: Shoupai, p: Pai): Menzi[] {
+    return Game.get_peng_mianzi(this._rule, shoupai, p, this.shan.paishu);
   }
 
   /**
@@ -317,7 +318,7 @@ export abstract class Player {
    * @param p {@link Pai | 牌}。指定された場合は大明槓、`null` の場合は暗槓と加槓が対象になる。
    * @returns カン可能な{@link Menzi | 面子}の配列。
    */
-  get_gang_mianzi(shoupai: Shoupai, p?: Pai | null): Menzi[]{
+  get_gang_mianzi(shoupai: Shoupai, p?: Pai | null): Menzi[] {
     return Game.get_gang_mianzi(
       this._rule,
       shoupai,
@@ -336,7 +337,7 @@ export abstract class Player {
    * * **`p`** が{@link Pai | 牌}のときは **`p`** を打牌してリーチ可能なら `true` を返す。
    * @returns リーチ可能なら `true` を返す。
    */
-  allow_lizhi(shoupai: Shoupai, p?: Pai | null): Pai[] | boolean{
+  allow_lizhi(shoupai: Shoupai, p?: Pai | null): Pai[] | boolean {
     return Game.allow_lizhi(
       this._rule,
       shoupai,
@@ -356,7 +357,7 @@ export abstract class Player {
    * @param hupai 状況役があるときは `true` を指定する
    * @returns 和了可能なら `true` を返す。
    */
-  allow_hule(shoupai: Shoupai, p?: Pai | null, hupai?: boolean): boolean{
+  allow_hule(shoupai: Shoupai, p?: Pai | null, hupai?: boolean): boolean {
     hupai = hupai || shoupai.lizhi || this.shan.paishu == 0;
     return Game.allow_hule(
       this._rule,
@@ -375,7 +376,7 @@ export abstract class Player {
    * @param shoupai {@link Shoupai}
    * @returns 九種九牌流局可能なら `true` を返す。
    */
-  allow_pingju(shoupai: Shoupai): boolean{
+  allow_pingju(shoupai: Shoupai): boolean {
     return Game.allow_pingju(this._rule, shoupai, this._diyizimo);
   }
 
@@ -385,7 +386,7 @@ export abstract class Player {
    * @param shoupai {@link Shoupai}
    * @returns 「テンパイ宣言」可能なら `true` を返す。
    */
-  allow_no_daopai(shoupai: Shoupai): boolean{
+  allow_no_daopai(shoupai: Shoupai): boolean {
     return Game.allow_no_daopai(this._rule, shoupai, this.shan.paishu);
   }
 

@@ -3,12 +3,34 @@
  */
 
 import { BoardInfo, BoardShan } from "boardInfo";
-import { Dapai, Fulou, Gang, Gangzimo, Hule, Kaigang, Paipu, Pingju, Qipai, Zimo } from "data";
+import {
+  Dapai,
+  Fulou,
+  Gang,
+  Gangzimo,
+  Hule,
+  Kaigang,
+  Paipu,
+  Pingju,
+  Qipai,
+  Zimo,
+} from "data";
 import { He } from "he";
-import { DapaiGameMessage, FulouGameMessage, GangGameMessage, GangzimoGameMessage, HuleGameMessage, JiejuGameMessage, KaigangGameMessage, KaijuGameMessage, QipaiGameMessage, ZimoGameMessage } from "message";
+import {
+  DapaiGameMessage,
+  FulouGameMessage,
+  GangGameMessage,
+  GangzimoGameMessage,
+  HuleGameMessage,
+  JiejuGameMessage,
+  KaigangGameMessage,
+  KaijuGameMessage,
+  QipaiGameMessage,
+  ZimoGameMessage,
+} from "message";
 import { Shoupai } from "shoupai";
 
-export interface Board extends BoardInfo {};
+export interface Board extends BoardInfo {}
 
 /**
  * 開局時の卓情報
@@ -26,7 +48,7 @@ export class Board implements BoardInfo {
    * **`kaiju`** が指定されない場合は、空の卓情報を生成する。
    * @param kaiju {@link Paipu} (または {@link KaijuGameMessage.kaiju})
    */
-  constructor(kaiju?: Paipu | KaijuGameMessage["kaiju"] | BoardKaijuParams){
+  constructor(kaiju?: Paipu | KaijuGameMessage["kaiju"] | BoardKaijuParams) {
     if (kaiju) this.kaiju(kaiju);
   }
 
@@ -44,7 +66,7 @@ export class Board implements BoardInfo {
    * **`kaiju`** を卓情報に反映する。
    * @param kaiju {@link Paipu} (または {@link KaijuGameMessage})
    */
-  kaiju(kaiju?: Paipu | KaijuGameMessage["kaiju"] | BoardKaijuParams): void{
+  kaiju(kaiju?: Paipu | KaijuGameMessage["kaiju"] | BoardKaijuParams): void {
     this.title = kaiju.title;
     this.player = kaiju.player;
     this.qijia = kaiju.qijia;
@@ -66,7 +88,7 @@ export class Board implements BoardInfo {
    * @param id 席順 (`0`: 仮東、`1`: 仮南、`2`: 仮西、`3`: 仮北)
    * @returns 現在の自風 (`0`: 東、`1`: 南、`2`: 西、`3`: 北)
    */
-  menfeng(id: number): number{
+  menfeng(id: number): number {
     return (id + 4 - this.qijia + 4 - this.jushu) % 4;
   }
 
@@ -74,7 +96,7 @@ export class Board implements BoardInfo {
    * **`qipai`** を卓情報に反映する。
    * @param qipai {@link Qipai} (または {@link QipaiGameMessage})
    */
-  qipai(qipai: Qipai["qipai"] | QipaiGameMessage["qipai"]): void{
+  qipai(qipai: Qipai["qipai"] | QipaiGameMessage["qipai"]): void {
     this.zhuangfeng = qipai.zhuangfeng;
     this.jushu = qipai.jushu;
     this.changbang = qipai.changbang;
@@ -104,7 +126,7 @@ export class Board implements BoardInfo {
       | Gangzimo["gangzimo"]
       | ZimoGameMessage["zimo"]
       | GangzimoGameMessage["gangzimo"]
-  ): void{
+  ): void {
     this.lizhi();
     this.lunban = zimo.l;
     this.shoupai[zimo.l].zimo(this.shan.zimo(zimo.p), false);
@@ -114,7 +136,7 @@ export class Board implements BoardInfo {
    * **`dapai`** を卓情報に反映する。
    * @param dapai {@link Dapai} (または {@link DapaiGameMessage})
    */
-  dapai(dapai: Dapai["dapai"] | DapaiGameMessage["dapai"]): void{
+  dapai(dapai: Dapai["dapai"] | DapaiGameMessage["dapai"]): void {
     this.lunban = dapai.l;
     this.shoupai[dapai.l].dapai(dapai.p, false);
     this.he[dapai.l].dapai(dapai.p);
@@ -125,7 +147,7 @@ export class Board implements BoardInfo {
    * **`fulou`** を卓情報に反映する。
    * @param fulou {@link Fulou} (または {@link FulouGameMessage})
    */
-  fulou(fulou: Fulou["fulou"] | FulouGameMessage["fulou"]): void{
+  fulou(fulou: Fulou["fulou"] | FulouGameMessage["fulou"]): void {
     this.lizhi();
     this.he[this.lunban].fulou(fulou.m);
     this.lunban = fulou.l;
@@ -136,7 +158,7 @@ export class Board implements BoardInfo {
    * **`gang`** を卓情報に反映する。
    * @param gang {@link Gang} (または {@link GangGameMessage})
    */
-  gang(gang: Gang["gang"] | GangGameMessage["gang"]): void{
+  gang(gang: Gang["gang"] | GangGameMessage["gang"]): void {
     this.lunban = gang.l;
     this.shoupai[gang.l].gang(gang.m, false);
   }
@@ -145,7 +167,7 @@ export class Board implements BoardInfo {
    * **`kaigang`** を卓情報に反映する。
    * @param kaigang {@link Kaigang} (または {@link KaigangGameMessage})
    */
-  kaigang(kaigang: Kaigang["kaigang"] | KaigangGameMessage["kaigang"]): void{
+  kaigang(kaigang: Kaigang["kaigang"] | KaigangGameMessage["kaigang"]): void {
     this.shan.kaigang(kaigang.baopai);
   }
 
@@ -153,7 +175,7 @@ export class Board implements BoardInfo {
    * **`hule`** を卓情報に反映する。
    * @param hule {@link Hule} (または {@link HuleGameMessage})
    */
-  hule(hule: Hule["hule"] | HuleGameMessage["hule"]): void{
+  hule(hule: Hule["hule"] | HuleGameMessage["hule"]): void {
     let shoupai = this.shoupai[hule.l];
     shoupai.fromString(hule.shoupai);
     if (hule.baojia != null) shoupai.dapai(shoupai.get_dapai().pop());
@@ -173,7 +195,7 @@ export class Board implements BoardInfo {
    * @param pingju {@link Pingju} (または {@link PingjuGameMessage})
    * @remarks **`defen`** は使われていない。
    */
-  pingju(pingju: Pick<Pingju["pingju"], "name" | "shoupai">): void{
+  pingju(pingju: Pick<Pingju["pingju"], "name" | "shoupai">): void {
     if (!pingju.name.match(/^三家和/)) this.lizhi();
     for (let l = 0; l < 4; l++) {
       if (pingju.shoupai[l]) this.shoupai[l].fromString(pingju.shoupai[l]);
@@ -184,7 +206,7 @@ export class Board implements BoardInfo {
    * **`paipu`** を卓情報に反映する。
    * @param jieju {@link Paipu} (または {@link JiejuGameMessage})
    */
-  jieju(paipu: Paipu | JiejuGameMessage["jieju"]): void{
+  jieju(paipu: Paipu | JiejuGameMessage["jieju"]): void {
     for (let id = 0; id < 4; id++) {
       this.defen[id] = paipu.defen[id];
     }
@@ -195,7 +217,7 @@ export class Board implements BoardInfo {
    * 成立待ちのリーチ宣言を成立させる。
    * @internal
    */
-  lizhi(): void{
+  lizhi(): void {
     if (this._lizhi) {
       this.defen[this.player_id[this.lunban]] -= 1000;
       this.lizhibang++;

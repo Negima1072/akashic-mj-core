@@ -8,11 +8,11 @@ import { Shoupai } from "shoupai";
 /**
  * 捨て牌を表現するクラス
  */
-export class He{
+export class He {
   /**
    * インスタンスを生成する。
    */
-  constructor(){
+  constructor() {
     this._pai = [];
     this._find = {};
   }
@@ -32,7 +32,7 @@ export class He{
    * @param p {@link Pai | 牌}
    * @returns `this`
    */
-  dapai(p: Pai): this{
+  dapai(p: Pai): this {
     if (!Shoupai.valid_pai(p)) throw new Error(p);
     this._pai.push(p.replace(/[\+\=\-]$/, ""));
     this._find[p[0] + (+p[1] || 5)] = true;
@@ -44,7 +44,7 @@ export class He{
    * @param m {@link Menzi | 面子}
    * @returns `this`
    */
-  fulou(m: Menzi): this{
+  fulou(m: Menzi): this {
     if (!Shoupai.valid_mianzi(m)) throw new Error(m);
     let p = m[0] + m.match(/\d(?=[\+\=\-])/),
       d = m.match(/[\+\=\-]/);
@@ -60,7 +60,7 @@ export class He{
    * @param p {@link Pai | 牌}
    * @returns **`p`** が捨て牌にあるとき `true` を返す。
    */
-  find(p: Pai): boolean{
+  find(p: Pai): boolean {
     return this._find[p[0] + (+p[1] || 5)];
   }
 }

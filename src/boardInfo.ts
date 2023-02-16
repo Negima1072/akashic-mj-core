@@ -4,12 +4,11 @@ import { Shan } from "./shan";
 import { Shoupai } from "./shoupai";
 
 export class BoardShan {
-
   paishu: number;
 
   baopai: Pai[];
 
-  fubaopai?: Pai[]; 
+  fubaopai?: Pai[];
 
   constructor(baopai: Pai) {
     this.paishu = 136 - 13 * 4 - 14;

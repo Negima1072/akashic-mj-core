@@ -197,7 +197,7 @@ function mianzi_all(shoupai: Shoupai): Hulexing[] {
   let shupai_all: Hulexing[] = [[]];
   for (let s of ["m", "p", "s"]) {
     let paitstr = s as keyof Bingpai;
-    if (paitstr != "_"){
+    if (paitstr != "_") {
       let new_mianzi = [];
       for (let mm of shupai_all) {
         for (let nn of mianzi(paitstr, shoupai._bingpai[paitstr])) {
@@ -245,7 +245,7 @@ function hule_mianzi_yiban(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (let s of ["m", "p", "s", "z"]) {
     let paitstr = s as keyof Bingpai;
-    if (paitstr != "_"){
+    if (paitstr != "_") {
       let bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] < 2) continue;
@@ -271,7 +271,7 @@ function hule_mianzi_qidui(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (let s of ["m", "p", "s", "z"]) {
     let paitstr = s as keyof Bingpai;
-    if (paitstr != "_"){
+    if (paitstr != "_") {
       let bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] == 0) continue;
@@ -297,7 +297,7 @@ function hule_mianzi_guoshi(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (let s of ["m", "p", "s", "z"]) {
     let paitstr = s as keyof Bingpai;
-    if (paitstr != "_"){
+    if (paitstr != "_") {
       let bingpai = shoupai._bingpai[paitstr];
       let nn = paitstr == "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
       for (let n of nn) {
@@ -327,7 +327,7 @@ function hule_mianzi_jiulian(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
   if (s == "z") return [];
 
   let mianzi = s as keyof Bingpai;
-  if (mianzi != "_"){
+  if (mianzi != "_") {
     let bingpai = shoupai._bingpai[mianzi];
     for (let n = 1; n <= 9; n++) {
       if (bingpai[n] == 0) return [];
@@ -345,31 +345,31 @@ function hule_mianzi_jiulian(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 }
 
 type Hudi = {
-  fu: number,
-  menqian: boolean,
-  zimo: boolean,
+  fu: number;
+  menqian: boolean;
+  zimo: boolean;
   shunzi: {
-    m: number[],
-    p: number[],
-    s: number[],
-  },
+    m: number[];
+    p: number[];
+    s: number[];
+  };
   kezi: {
-    m: number[],
-    p: number[],
-    s: number[],
-    z: number[],
-  },
-  n_shunzi: number,
-  n_kezi: number,
-  n_ankezi: number,
-  n_gangzi: number,
-  n_yaojiu: number,
-  n_zipai: number,
-  danqi: boolean,
-  pinghu: boolean,
-  zhuangfeng: number,
-  menfeng: number,
-}
+    m: number[];
+    p: number[];
+    s: number[];
+    z: number[];
+  };
+  n_shunzi: number;
+  n_kezi: number;
+  n_ankezi: number;
+  n_gangzi: number;
+  n_yaojiu: number;
+  n_zipai: number;
+  danqi: boolean;
+  pinghu: boolean;
+  zhuangfeng: number;
+  menfeng: number;
+};
 
 function get_hudi(mianzi: Hulexing, zhuangfeng: number, menfeng: number): Hudi {
   const zhuangfengpai = new RegExp(`^z${zhuangfeng + 1}.*$`);
@@ -452,8 +452,7 @@ function get_hudi(mianzi: Hulexing, zhuangfeng: number, menfeng: number): Hudi {
       }
       hudi.fu += fu;
       let paitstr = m[0] as keyof Bingpai;
-      if (paitstr != "_")
-        hudi.kezi[paitstr][parseInt(m[1])]++;
+      if (paitstr != "_") hudi.kezi[paitstr][parseInt(m[1])]++;
     } else {
       hudi.n_shunzi++;
       if (m.match(kanzhang)) hudi.fu += 2;
@@ -497,7 +496,13 @@ function get_pre_hupai(hupai: HuleParam["hupai"]): Huleyi<string>[] {
   return pre_hupai;
 }
 
-function get_hupai(mianzi: Hulexing, hudi: Hudi, pre_hupai: Huleyi<string>[], post_hupai: Huleyi<string>[], rule: Rule): Huleyi<string>[] {
+function get_hupai(
+  mianzi: Hulexing,
+  hudi: Hudi,
+  pre_hupai: Huleyi<string>[],
+  post_hupai: Huleyi<string>[],
+  rule: Rule
+): Huleyi<string>[] {
   function menqianqing() {
     if (hudi.menqian && hudi.zimo) return [{ name: "門前清自摸和", fanshu: 1 }];
     return [];
@@ -550,7 +555,7 @@ function get_hupai(mianzi: Hulexing, hudi: Hudi, pre_hupai: Huleyi<string>[], po
     const shunzi = hudi.shunzi;
     for (let s of ["m", "p", "s"]) {
       let paitstr = s as keyof Bingpai;
-      if (paitstr != "_" && paitstr != "z"){
+      if (paitstr != "_" && paitstr != "z") {
         if (shunzi[paitstr][1] && shunzi[paitstr][4] && shunzi[paitstr][7])
           return [{ name: "一気通貫", fanshu: hudi.menqian ? 2 : 1 }];
       }
@@ -718,7 +723,7 @@ function get_hupai(mianzi: Hulexing, hudi: Hudi, pre_hupai: Huleyi<string>[], po
 
   for (let hupai of damanguan) {
     if (!rule["enableDoubleYakuman"]) hupai.fanshu = "*";
-    if (!rule["enableYakumanPao"]){
+    if (!rule["enableYakumanPao"]) {
       let hupaiY = hupai as Yiman<string>;
       delete hupaiY.baojia;
       hupai = hupaiY;
@@ -752,7 +757,12 @@ function get_hupai(mianzi: Hulexing, hudi: Hudi, pre_hupai: Huleyi<string>[], po
   return hupai;
 }
 
-function get_post_hupai(shoupai: Shoupai, rongpai: Pai, baopai: Pai[], fubaopai: Pai[]): Huleyi<string>[] {
+function get_post_hupai(
+  shoupai: Shoupai,
+  rongpai: Pai,
+  baopai: Pai[],
+  fubaopai: Pai[]
+): Huleyi<string>[] {
   let new_shoupai = shoupai.clone();
   if (rongpai) new_shoupai.zimo(rongpai);
   let paistr = new_shoupai.toString();
@@ -795,7 +805,12 @@ function get_post_hupai(shoupai: Shoupai, rongpai: Pai, baopai: Pai[], fubaopai:
   return post_hupai;
 }
 
-function get_defen(fu: number, hupai: Huleyi<string>[], rongpai: string, param: HuleParam): Partial<HuleResult> {
+function get_defen(
+  fu: number,
+  hupai: Huleyi<string>[],
+  rongpai: string,
+  param: HuleParam
+): Partial<HuleResult> {
   if (hupai.length == 0) return { defen: 0 };
 
   let menfeng = param.menfeng;
@@ -899,36 +914,44 @@ export function hule(
   shoupai: Shoupai,
   rongpai: Pai | null | undefined,
   param: HuleParam
-): HuleResult{
+): HuleResult {
   if (rongpai) {
-    if (! rongpai.match(/[\+\=\-]$/)) throw new Error(rongpai);
-      rongpai = rongpai.slice(0,2) + rongpai.slice(-1);
+    if (!rongpai.match(/[\+\=\-]$/)) throw new Error(rongpai);
+    rongpai = rongpai.slice(0, 2) + rongpai.slice(-1);
   }
 
   let max: HuleResult;
-  let pre_hupai  = get_pre_hupai(param.hupai);
-  let post_hupai = get_post_hupai(shoupai, rongpai,
-                                  param.baopai, param.fubaopai);
+  let pre_hupai = get_pre_hupai(param.hupai);
+  let post_hupai = get_post_hupai(
+    shoupai,
+    rongpai,
+    param.baopai,
+    param.fubaopai
+  );
 
   for (let mianzi of hule_mianzi(shoupai, rongpai)) {
+    let hudi = get_hudi(mianzi, param.zhuangfeng, param.menfeng);
+    let hupai = get_hupai(mianzi, hudi, pre_hupai, post_hupai, param.rule);
+    let rv = get_defen(hudi.fu, hupai, rongpai, param);
 
-      let hudi  = get_hudi(mianzi, param.zhuangfeng, param.menfeng);
-      let hupai = get_hupai(mianzi, hudi, pre_hupai, post_hupai, param.rule);
-      let rv    = get_defen(hudi.fu, hupai, rongpai, param);
-
-      if (! max || rv.defen > max.defen
-          || rv.defen == max.defen
-              && (! rv.fanshu || rv.fanshu > max.fanshu
-                  || rv.fanshu == max.fanshu && rv.fu > max.fu) && rv.hupai){
-                    max = {
-                      fu: rv.fu,
-                      hupai: rv.hupai,
-                      defen: rv.defen,
-                      fenpei: rv.fenpei,
-                      fanshu: rv.fanshu,
-                      damanguan: rv.damanguan
-                    };
-      }
+    if (
+      !max ||
+      rv.defen > max.defen ||
+      (rv.defen == max.defen &&
+        (!rv.fanshu ||
+          rv.fanshu > max.fanshu ||
+          (rv.fanshu == max.fanshu && rv.fu > max.fu)) &&
+        rv.hupai)
+    ) {
+      max = {
+        fu: rv.fu,
+        hupai: rv.hupai,
+        defen: rv.defen,
+        fenpei: rv.fenpei,
+        fanshu: rv.fanshu,
+        damanguan: rv.damanguan,
+      };
+    }
   }
 
   return max;
@@ -947,7 +970,7 @@ export type HuleParamInput = Partial<
  * @returns 場況情報
  * @see hule
  */
-export function hule_param(param?: HuleParamInput): HuleParam{
+export function hule_param(param?: HuleParamInput): HuleParam {
   let rv = {
     rule: param.rule ?? rule(),
     zhuangfeng: param.zhuangfeng ?? 0,
@@ -991,7 +1014,10 @@ export type Hulexing = Menzi[];
  * @param rongpai {@link Pai | 牌}。指定されていないの場合に手牌の最後の一枚がツモと見なす。
  * @returns 和了形の配列。和了形にならない場合は空配列を返す。
  */
-export function hule_mianzi(shoupai: Shoupai, rongpai?: Pai | null): Hulexing[]{
+export function hule_mianzi(
+  shoupai: Shoupai,
+  rongpai?: Pai | null
+): Hulexing[] {
   let new_shoupai = shoupai.clone();
   if (rongpai) new_shoupai.zimo(rongpai);
 

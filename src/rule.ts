@@ -12,7 +12,7 @@
  * const rule = Majiang.rule();
  * ```
  */
-export interface Rule{
+export interface Rule {
   /* 点数関連 */
   /**
    * 配給原点
@@ -221,11 +221,11 @@ export interface Rule{
 export function rule(params?: Partial<Rule>): Rule {
   let rule: Rule = {
     originPoint: 25000,
-    rankPoint: ['20.0','10.0','-10.0','-20.0'],
+    rankPoint: ["20.0", "10.0", "-10.0", "-20.0"],
     redPai: {
       m: 1,
       p: 1,
-      s: 1
+      s: 1,
     },
     enableKuitan: true,
     kuikaeAllowLevel: 0,
@@ -250,8 +250,8 @@ export function rule(params?: Partial<Rule>): Rule {
     enableDoubleYakuman: true,
     enableCountYakuman: true,
     enableYakumanPao: true,
-    enableRoundUpMangan: false
+    enableRoundUpMangan: false,
   };
 
-  return {...rule, ...params};
+  return { ...rule, ...params };
 }

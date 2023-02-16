@@ -5,7 +5,14 @@
 import { BoardInfo } from "boardInfo";
 import { Hule, Huleyi, Menzi, Moda, Pai, Paipu, Paizi } from "data";
 import { He } from "he";
-import { DapaiPlayerMessage, EmptyPlayerMessage, FulouPlayerMessage, GameMessage, GangPlayerMessage, PlayerMessage } from "message";
+import {
+  DapaiPlayerMessage,
+  EmptyPlayerMessage,
+  FulouPlayerMessage,
+  GameMessage,
+  GangPlayerMessage,
+  PlayerMessage,
+} from "message";
 import { Player } from "player";
 import { Rule, rule as makeRule } from "rule";
 import { Shan } from "shan";
@@ -40,7 +47,7 @@ export class Game {
     callback?: JiejuCallback | null,
     rule?: Rule,
     title?: string
-  ){
+  ) {
     this._players = players;
     this._callback = callback || (() => {});
     this._rule = rule || makeRule();
@@ -74,7 +81,7 @@ export class Game {
    * @param shoupai {@link Shoupai | 手牌}
    * @returns 打牌可能な{@link Pai | 牌}の配列
    */
-  static get_dapai(rule: Rule, shoupai: Shoupai): Pai[] | null{
+  static get_dapai(rule: Rule, shoupai: Shoupai): Pai[] | null {
     if (rule["kuikaeAllowLevel"] == 0) return shoupai.get_dapai(true);
     if (
       rule["kuikaeAllowLevel"] == 1 &&
@@ -103,7 +110,7 @@ export class Game {
     shoupai: Shoupai,
     p: Pai,
     paishu: number
-  ): Menzi[]{
+  ): Menzi[] {
     let mianzi = shoupai.get_chi_mianzi(p, rule["kuikaeAllowLevel"] == 0);
     let paitstr = p[0] as keyof Bingpai;
     if (!mianzi) return mianzi;
@@ -130,7 +137,7 @@ export class Game {
     shoupai: Shoupai,
     p: Pai,
     paishu: number
-  ): Menzi[]{
+  ): Menzi[] {
     let mianzi = shoupai.get_peng_mianzi(p);
     if (!mianzi) return mianzi;
     return paishu == 0 ? [] : mianzi;
@@ -151,7 +158,7 @@ export class Game {
     p: Pai | null | undefined,
     paishu: number,
     n_gang?: number
-  ): Menzi[]{
+  ): Menzi[] {
     let mianzi = shoupai.get_gang_mianzi(p);
     if (!mianzi || mianzi.length == 0) return mianzi;
 
@@ -198,7 +205,7 @@ export class Game {
     p: Pai | null | undefined,
     paishu: number,
     defen: number
-  ): Pai[] | boolean{
+  ): Pai[] | boolean {
     if (!shoupai._zimo) return false;
     if (shoupai.lizhi) return false;
     if (!shoupai.menqian) return false;
@@ -211,8 +218,7 @@ export class Game {
     if (p) {
       let new_shoupai = shoupai.clone().dapai(p);
       return (
-        Util.xiangting(new_shoupai) == 0 &&
-        Util.tingpai(new_shoupai).length > 0
+        Util.xiangting(new_shoupai) == 0 && Util.tingpai(new_shoupai).length > 0
       );
     } else {
       let dapai = [];
@@ -248,7 +254,7 @@ export class Game {
     menfeng: number,
     hupai: boolean,
     neng_rong: boolean
-  ): boolean{
+  ): boolean {
     if (p && !neng_rong) return false;
 
     let new_shoupai = shoupai.clone();
@@ -264,7 +270,7 @@ export class Game {
       hupai: {},
       baopai: [],
       jicun: { changbang: 0, lizhibang: 0 },
-      fubaopai: []
+      fubaopai: [],
     };
     let hule = Util.hule(shoupai, p, param);
 
@@ -277,14 +283,18 @@ export class Game {
    * @param shoupai {@link Shoupai | 手牌}
    * @param diyizimo 第一ツモ順の場合は `true` を指定する
    */
-  static allow_pingju(rule: Rule, shoupai: Shoupai, diyizimo: boolean): boolean{
+  static allow_pingju(
+    rule: Rule,
+    shoupai: Shoupai,
+    diyizimo: boolean
+  ): boolean {
     if (!(diyizimo && shoupai._zimo)) return false;
     if (!rule["enableInterruptedGame"]) return false;
 
     let n_yaojiu = 0;
     for (let s of ["m", "p", "s", "z"]) {
       let paitstr = s as keyof Bingpai;
-      if (paitstr != "_"){
+      if (paitstr != "_") {
         let bingpai = shoupai._bingpai[paitstr];
         let nn = s == "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
         for (let n of nn) {
@@ -301,15 +311,16 @@ export class Game {
    * @param shoupai {@link Shoupai | 手牌}
    * @param paishu 現在の残り牌数
    */
-  static allow_no_daopai(rule: Rule, shoupai: Shoupai, paishu: number): boolean{
+  static allow_no_daopai(
+    rule: Rule,
+    shoupai: Shoupai,
+    paishu: number
+  ): boolean {
     if (paishu > 0 || shoupai._zimo) return false;
     if (!rule["enableNoTenDeclared"]) return false;
     if (shoupai.lizhi) return false;
 
-    return (
-      Util.xiangting(shoupai) == 0 &&
-      Util.tingpai(shoupai).length > 0
-    );
+    return Util.xiangting(shoupai) == 0 && Util.tingpai(shoupai).length > 0;
   }
 
   /**
@@ -480,10 +491,11 @@ export class Game {
    * 非同期モードで対局を開始する。
    * @param qijia 起家を指定すること(`0`〜`3`)。指定しない場合はランダムに起家を決定する。
    */
-  kaiju(qijia?: number): void{
+  kaiju(qijia?: number): void {
     this._model.qijia = qijia ?? Math.floor(g.game.random.generate() * 4);
 
-    this._max_jushu = this._rule["gameCount"] == 0 ? 0 : this._rule["gameCount"] * 4 - 1;
+    this._max_jushu =
+      this._rule["gameCount"] == 0 ? 0 : this._rule["gameCount"] * 4 - 1;
 
     this._paipu = {
       title: this._model.title,
@@ -519,7 +531,7 @@ export class Game {
    * @param id  対局者の席順(`0`〜`3`)
    * @param reply {@link PlayerMessage | メッセージ}。応答内容。
    */
-  reply(id: number, reply: PlayerMessage): void{
+  reply(id: number, reply: PlayerMessage): void {
     this._reply[id] = reply || {};
     if (this._sync) return;
     if (this._reply.filter((x) => x).length < 4) return;
@@ -530,14 +542,14 @@ export class Game {
    * 非同期モードの対局を停止する。
    * @param callback 停止の際に呼び出す関数。
    */
-  stop(callback?: () => void): void{
+  stop(callback?: () => void): void {
     this._stop = callback;
   }
 
   /**
    * 非同期モードの対局を再開する。
    */
-  start(): void{
+  start(): void {
     if (this._timeout_id) return;
     this._stop = null;
     this._timeout_id = setTimeout(() => this.next(), 0);
@@ -547,7 +559,7 @@ export class Game {
    * デバッグ用。同期モードで対局を開始する。
    * 対局終了まで一切の非同期呼び出しは行わず、無停止で対局を完了する。
    */
-  do_sync(): this{
+  do_sync(): this {
     this._sync = true;
 
     this.kaiju();
@@ -573,42 +585,42 @@ export class Game {
   /**
    * インスタンス変数 **`_model`** を返す。
    */
-  get model(): BoardInfo{
+  get model(): BoardInfo {
     return this._model;
   }
 
   /**
    * インスタンス変数 **`_view`** に **`view`** を設定する。
    */
-  set view(view: View){
+  set view(view: View) {
     this._view = view;
   }
 
   /**
    * インスタンス変数 **`_speed`** を返す。
    */
-  get speed(): number{
+  get speed(): number {
     return this._speed;
   }
 
   /**
    * インスタンス変数 **`_speed`** に **`speed`** を設定する。
    */
-  set speed(speed: number){
+  set speed(speed: number) {
     this._speed = speed;
   }
 
   /**
    * インスタンス変数 **`_wait`** に **`wait`** を設定する。
    */
-  set wait(wait: number){
+  set wait(wait: number) {
     this._wait = wait;
   }
 
   /**
    * インスタンス変数 **`_handler`** に **`handler`** を設定する。
    */
-  set handler(callback: () => void){
+  set handler(callback: () => void) {
     this._handler = callback;
   }
 
@@ -616,7 +628,7 @@ export class Game {
    * 対局者からの応答を読み出し、対局の次のステップに進む。
    * @internal
    */
-  next(): void{
+  next(): void {
     clearTimeout(this._timeout_id);
     this._timeout_id = undefined;
     if (this._reply.filter((x) => x).length < 4) return;
@@ -640,7 +652,7 @@ export class Game {
    * @param msg {@link GameMessage | メッセージ}
    * @internal
    */
-  notify_players(type: string, msg: GameMessage[]): void{
+  notify_players(type: string, msg: GameMessage[]): void {
     for (let l = 0; l < 4; l++) {
       let id = this._model.player_id[l];
       if (this._sync) this._players[id].action(msg[l]);
@@ -661,7 +673,7 @@ export class Game {
    * **`timeout`** の指定がない場合は、インスタンス変数 **`_speed`** に応じて待ち時間を決定する。
    * @internal
    */
-  call_players(type: string, msg: GameMessage[], timeout?: number): void{
+  call_players(type: string, msg: GameMessage[], timeout?: number): void {
     timeout =
       this._speed == 0 ? 0 : timeout == null ? this._speed * 200 : timeout;
     this._status = type;
@@ -683,7 +695,7 @@ export class Game {
    * @param shan {@link Shan}。指定されていないの場合ランダムに生成する。
    * @internal
    */
-  qipai(shan?: Shan): void{
+  qipai(shan?: Shan): void {
     let model = this._model;
 
     model.shan = shan || new Shan(this._rule);
@@ -747,7 +759,7 @@ export class Game {
    * ツモの局進行を行う。
    * @internal
    */
-  zimo(): void{
+  zimo(): void {
     let model = this._model;
 
     model.lunban = (model.lunban + 1) % 4;
@@ -773,7 +785,7 @@ export class Game {
    * @param dapai {@link Pai | 牌}
    * @internal
    */
-  dapai(dapai: Pai): void{
+  dapai(dapai: Pai): void {
     let model = this._model;
 
     this._yifa[model.lunban] = false;
@@ -825,7 +837,7 @@ export class Game {
    * @param fulou {@link Menzi | 面子}
    * @internal
    */
-  fulou(fulou: Menzi): void{
+  fulou(fulou: Menzi): void {
     let model = this._model;
 
     this._diyizimo = false;
@@ -860,7 +872,7 @@ export class Game {
    * @param gang {@link Menzi | 面子}
    * @internal
    */
-  gang(gang: Menzi): void{
+  gang(gang: Menzi): void {
     let model = this._model;
 
     model.shoupai[model.lunban].gang(gang);
@@ -886,7 +898,7 @@ export class Game {
    * リンシャン牌ツモの局進行を行う。
    * @internal
    */
-  gangzimo(): void{
+  gangzimo(): void {
     let model = this._model;
 
     this._diyizimo = false;
@@ -898,7 +910,10 @@ export class Game {
     let paipu = { gangzimo: { l: model.lunban, p: zimo } };
     this.add_paipu(paipu);
 
-    if (!this._rule["enableKandoraAfterRide"] || this._gang.match(/^[mpsz]\d{4}$/))
+    if (
+      !this._rule["enableKandoraAfterRide"] ||
+      this._gang.match(/^[mpsz]\d{4}$/)
+    )
       this.kaigang();
 
     let msg = [];
@@ -915,7 +930,7 @@ export class Game {
    * 開槓の局進行を行う。
    * @internal
    */
-  kaigang(): void{
+  kaigang(): void {
     this._gang = null;
 
     if (!this._rule["enableKandora"]) return;
@@ -941,7 +956,7 @@ export class Game {
    * 和了の局進行を行う。
    * @internal
    */
-  hule(): void{
+  hule(): void {
     let model = this._model;
 
     if (this._status != "hule") {
@@ -988,11 +1003,12 @@ export class Game {
     };
     let hule = Util.hule(shoupai, rongpai, param);
 
-    if (this._rule["consecutiveMode"] > 0 && menfeng == 0) this._lianzhuang = true;
+    if (this._rule["consecutiveMode"] > 0 && menfeng == 0)
+      this._lianzhuang = true;
     if (this._rule["gameCount"] == 0) this._lianzhuang = false;
     this._fenpei = hule.fenpei;
 
-    function parseBaojiaStr2Int(baojia: string): number{
+    function parseBaojiaStr2Int(baojia: string): number {
       if (baojia === "=") return (menfeng + 2) % 4;
       if (baojia === "-") return (menfeng + 1) % 4;
       if (baojia === "+") return (menfeng + 3) % 4;
@@ -1011,23 +1027,22 @@ export class Game {
         damanguan: hule.damanguan,
         defen: hule.defen,
         hupai: hule.hupai.map((h): Huleyi<number> => {
-          if ("baojia" in h){
-            return{
+          if ("baojia" in h) {
+            return {
               name: h.name,
               fanshu: h.fanshu,
               baojia: parseBaojiaStr2Int(h.baojia),
-            }
-          }else{
-            if (typeof h.fanshu === "string"){
-              return{
+            };
+          } else {
+            if (typeof h.fanshu === "string") {
+              return {
                 name: h.name,
-                fanshu: h.fanshu
+                fanshu: h.fanshu,
               };
-            }
-            else{
-              return{
+            } else {
+              return {
                 name: h.name,
-                fanshu: h.fanshu
+                fanshu: h.fanshu,
               };
             }
           }
@@ -1056,7 +1071,7 @@ export class Game {
    * @param shoupai 流局時に公開した {@link Paizi | 牌姿} を指定する。指定されていないの場合は全員ノーテンの扱る。
    * @internal
    */
-  pingju(name: string, shoupai?: Paizi[]): void{
+  pingju(name: string, shoupai?: Paizi[]): void {
     let model = this._model;
 
     let fenpei = [0, 0, 0, 0];
@@ -1082,7 +1097,8 @@ export class Game {
         ) {
           n_tingpai++;
           shoupai[l] = model.shoupai[l].toString();
-          if (this._rule["consecutiveMode"] == 2 && l == 0) this._lianzhuang = true;
+          if (this._rule["consecutiveMode"] == 2 && l == 0)
+            this._lianzhuang = true;
         } else {
           shoupai[l] = "";
         }
@@ -1119,7 +1135,11 @@ export class Game {
       }
       if (!name) {
         name = "荒牌平局";
-        if (this._rule["enableNoTenPenalty"] && 0 < n_tingpai && n_tingpai < 4) {
+        if (
+          this._rule["enableNoTenPenalty"] &&
+          0 < n_tingpai &&
+          n_tingpai < 4
+        ) {
           for (let l = 0; l < 4; l++) {
             fenpei[l] = shoupai[l] ? 3000 / n_tingpai : -3000 / (4 - n_tingpai);
           }
@@ -1153,7 +1173,7 @@ export class Game {
    * 対局終了の判断を行う。
    * @internal
    */
-  last(): void{
+  last(): void {
     let model = this._model;
 
     model.lunban = -1;
@@ -1209,7 +1229,7 @@ export class Game {
    * 対局終了の処理を行う。
    * @internal
    */
-  jieju(): void{
+  jieju(): void {
     let model = this._model;
 
     let paiming: number[] = [];
@@ -1259,7 +1279,7 @@ export class Game {
    * 配牌の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_kaiju(): void{
+  reply_kaiju(): void {
     this.delay(() => this.qipai(), 0);
   }
 
@@ -1267,7 +1287,7 @@ export class Game {
    * ツモの局進行メソッドを呼び出す。
    * @internal
    */
-  reply_qipai(): void{
+  reply_qipai(): void {
     this.delay(() => this.zimo(), 0);
   }
 
@@ -1275,7 +1295,7 @@ export class Game {
    * ツモ応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_zimo(): void{
+  reply_zimo(): void {
     let model = this._model;
 
     let reply = this.get_reply(model.lunban);
@@ -1316,14 +1336,15 @@ export class Game {
    * 打牌応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_dapai(): void{
+  reply_dapai(): void {
     let model = this._model;
 
     for (let i = 1; i < 4; i++) {
       let l = (model.lunban + i) % 4;
       let reply = this.get_reply(l);
       if ("hule" in reply && this.allow_hule(l)) {
-        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length) continue;
+        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length)
+          continue;
         if (this._view) this._view.say("rong", l);
         this._hule.push(l);
       } else {
@@ -1362,7 +1383,10 @@ export class Game {
     }
 
     if (this._n_gang.reduce((x, y) => x + y) == 4) {
-      if (Math.max(...this._n_gang) < 4 && this._rule["enableInterruptedGame"]) {
+      if (
+        Math.max(...this._n_gang) < 4 &&
+        this._rule["enableInterruptedGame"]
+      ) {
         return this.delay(() => this.pingju("四開槓"), 0);
       }
     }
@@ -1412,7 +1436,7 @@ export class Game {
    * 副露応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_fulou(): void{
+  reply_fulou(): void {
     let model = this._model;
 
     if (this._gang) {
@@ -1435,7 +1459,7 @@ export class Game {
    * 槓応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_gang(): void{
+  reply_gang(): void {
     let model = this._model;
 
     if (this._gang.match(/^[mpsz]\d{4}$/)) {
@@ -1446,7 +1470,8 @@ export class Game {
       let l = (model.lunban + i) % 4;
       let reply = this.get_reply(l);
       if ("hule" in reply && this.allow_hule(l)) {
-        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length) continue;
+        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length)
+          continue;
         if (this._view) this._view.say("rong", l);
         this._hule.push(l);
       } else {
@@ -1466,7 +1491,7 @@ export class Game {
    * 和了応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_hule(): void{
+  reply_hule(): void {
     let model = this._model;
 
     for (let l = 0; l < 4; l++) {
@@ -1487,7 +1512,7 @@ export class Game {
    * 流局応答の妥当性を確認し、次の局進行メソッドを呼び出す。
    * @internal
    */
-  reply_pingju(): void{
+  reply_pingju(): void {
     let model = this._model;
 
     for (let l = 0; l < 4; l++) {
@@ -1503,7 +1528,7 @@ export class Game {
    * @returns 打牌可能な{@link Pai | 牌}の配列
    * @internal
    */
-  get_dapai(): Pai[]{
+  get_dapai(): Pai[] {
     let model = this._model;
     return Game.get_dapai(this._rule, model.shoupai[model.lunban]);
   }
@@ -1514,7 +1539,7 @@ export class Game {
    * @returns チー可能な{@link Menzi | 面子}の配列
    * @internal
    */
-  get_chi_mianzi(l: number): Menzi[]{
+  get_chi_mianzi(l: number): Menzi[] {
     let model = this._model;
     let d = "_+=-"[(4 + model.lunban - l) % 4];
     return Game.get_chi_mianzi(
@@ -1531,7 +1556,7 @@ export class Game {
    * @returns ポン可能な{@link Menzi | 面子}の配列
    * @internal
    */
-  get_peng_mianzi(l: number): Menzi[]{
+  get_peng_mianzi(l: number): Menzi[] {
     let model = this._model;
     let d = "_+=-"[(4 + model.lunban - l) % 4];
     return Game.get_peng_mianzi(
@@ -1548,7 +1573,7 @@ export class Game {
    * @returns カン可能な{@link Menzi | 面子}の配列
    * @internal
    */
-  get_gang_mianzi(l?: number | null): Menzi[]{
+  get_gang_mianzi(l?: number | null): Menzi[] {
     let model = this._model;
     if (l == null) {
       return Game.get_gang_mianzi(
@@ -1576,7 +1601,7 @@ export class Game {
    * @returns **`p`** が `null` のときはリーチ可能な打牌の配列。 **`p`** が {@link Pai | 牌} のときは **`p`** を打牌してリーチ可能なら `true` を返す
    * @internal
    */
-  allow_lizhi(p?: Pai | null): Pai[] | boolean{
+  allow_lizhi(p?: Pai | null): Pai[] | boolean {
     let model = this._model;
     return Game.allow_lizhi(
       this._rule,
@@ -1595,7 +1620,7 @@ export class Game {
    * @returns ロン和了可能なら `true` を返す。
    * @internal
    */
-  allow_hule(l?: number | null): boolean{
+  allow_hule(l?: number | null): boolean {
     let model = this._model;
     if (l == null) {
       let hupai =
@@ -1637,7 +1662,7 @@ export class Game {
    * @returns 九種九牌流局可能なら `true` を返す。
    * @internal
    */
-  allow_pingju(): boolean{
+  allow_pingju(): boolean {
     let model = this._model;
     return Game.allow_pingju(
       this._rule,
@@ -1654,7 +1679,7 @@ export class Game {
    * @param timeout 待ち時間
    * @internal
    */
-  delay(callback: () => void, timeout?: number): void{
+  delay(callback: () => void, timeout?: number): void {
     if (this._sync) return callback();
 
     timeout =
@@ -1671,7 +1696,7 @@ export class Game {
    * @param paipu 追加の{@link Paipu | 牌譜}の{@link Moda | 模打}情報
    * @internal
    */
-  add_paipu(paipu: Moda): void{
+  add_paipu(paipu: Moda): void {
     this._paipu.log[this._paipu.log.length - 1].push(paipu);
   }
 
@@ -1681,7 +1706,7 @@ export class Game {
    * @returns 応答{@link PlayerMessage | メッセージ}
    * @internal
    */
-  get_reply(l: number): PlayerMessage{
+  get_reply(l: number): PlayerMessage {
     let model = this._model;
     return this._reply[model.player_id[l]];
   }
