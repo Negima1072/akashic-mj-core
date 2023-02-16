@@ -5,11 +5,18 @@
     "prettier"
   ],
   "parserOptions": {
-      "project": "tsconfig.json",
-      "sourceType": "module"
+    "project": "tsconfig.json",
+    "sourceType": "module"
   },
   "rules": {
     "radix": 0,
-    "@typescript-eslint/naming-convention": 0
-  }
+    "@typescript-eslint/naming-convention": 0,
+    "@typescript-eslint/member-ordering": 1
+  },
+  "ignorePatterns": [
+    "/lib/**/*",
+    "/test/**/*",
+    "**/*.js",
+    "**/*.config.ts"
+  ]
 }
