@@ -7,7 +7,6 @@ import type { Rule } from "rule";
 import { rule } from "rule";
 import { Shan } from "shan";
 import type { Bingpai, Shoupai } from "shoupai";
-import * as Util from "./";
 
 /**
  * 和了点計算に使用する場況情報
@@ -162,10 +161,10 @@ export interface HuleResult {
   fenpei: number[];
 }
 
-function mianzi(s: string, bingpai: number[], n = 1): Hulexing[] {
+function mianzi(s: string, bingpai: number[], n: number = 1): Hulexing[] {
   if (n > 9) return [[]];
 
-  if (bingpai[n] == 0) return mianzi(s, bingpai, n + 1);
+  if (bingpai[n] === 0) return mianzi(s, bingpai, n + 1);
 
   let shunzi: Hulexing[] = [];
   if (n <= 7 && bingpai[n] > 0 && bingpai[n + 1] > 0 && bingpai[n + 2] > 0) {
@@ -182,7 +181,7 @@ function mianzi(s: string, bingpai: number[], n = 1): Hulexing[] {
   }
 
   let kezi: Hulexing[] = [];
-  if (bingpai[n] == 3) {
+  if (bingpai[n] === 3) {
     bingpai[n] -= 3;
     kezi = mianzi(s, bingpai, n + 1);
     bingpai[n] += 3;
@@ -198,7 +197,7 @@ function mianzi_all(shoupai: Shoupai): Hulexing[] {
   let shupai_all: Hulexing[] = [[]];
   for (const s of ["m", "p", "s"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const new_mianzi = [];
       for (const mm of shupai_all) {
         for (const nn of mianzi(paitstr, shoupai._bingpai[paitstr])) {
@@ -211,8 +210,8 @@ function mianzi_all(shoupai: Shoupai): Hulexing[] {
 
   const zipai: Hulexing = [];
   for (let n = 1; n <= 7; n++) {
-    if (shoupai._bingpai.z[n] == 0) continue;
-    if (shoupai._bingpai.z[n] != 3) return [];
+    if (shoupai._bingpai.z[n] === 0) continue;
+    if (shoupai._bingpai.z[n] !== 3) return [];
     zipai.push("z" + n + n + n);
   }
 
@@ -230,9 +229,9 @@ function add_hulepai(mianzi: Hulexing, p: Pai): Hulexing[] {
 
   for (let i = 0; i < mianzi.length; i++) {
     if (mianzi[i].match(/[\+\=\-]|\d{4}/)) continue;
-    if (i > 0 && mianzi[i] == mianzi[i - 1]) continue;
+    if (i > 0 && mianzi[i] === mianzi[i - 1]) continue;
     const m = mianzi[i].replace(regexp, replacer);
-    if (m == mianzi[i]) continue;
+    if (m === mianzi[i]) continue;
     const tmp_mianzi = mianzi.concat();
     tmp_mianzi[i] = m;
     new_mianzi.push(tmp_mianzi);
@@ -246,7 +245,7 @@ function hule_mianzi_yiban(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] < 2) continue;
@@ -254,7 +253,7 @@ function hule_mianzi_yiban(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
         const jiangpai = s + n + n;
         for (const mm of mianzi_all(shoupai)) {
           mm.unshift(jiangpai);
-          if (mm.length != 5) continue;
+          if (mm.length !== 5) continue;
           mianzi = mianzi.concat(add_hulepai(mm, hulepai));
         }
         bingpai[n] += 2;
@@ -272,13 +271,13 @@ function hule_mianzi_qidui(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
-        if (bingpai[n] == 0) continue;
-        if (bingpai[n] == 2) {
+        if (bingpai[n] === 0) continue;
+        if (bingpai[n] === 2) {
           const m =
-            s + n == hulepai.slice(0, 2)
+            s + n === hulepai.slice(0, 2)
               ? s + n + n + hulepai[2] + "!"
               : s + n + n;
           mianzi.push(m);
@@ -287,7 +286,7 @@ function hule_mianzi_qidui(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
     }
   }
 
-  return mianzi.length == 7 ? [mianzi] : [];
+  return mianzi.length === 7 ? [mianzi] : [];
 }
 
 function hule_mianzi_guoshi(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
@@ -298,48 +297,48 @@ function hule_mianzi_guoshi(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
-      const nn = paitstr == "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
+      const nn = paitstr === "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
       for (const n of nn) {
-        if (bingpai[n] == 2) {
+        if (bingpai[n] === 2) {
           const m =
-            s + n == hulepai.slice(0, 2)
+            s + n === hulepai.slice(0, 2)
               ? s + n + n + hulepai[2] + "!"
               : s + n + n;
           mianzi.unshift(m);
           n_duizi++;
-        } else if (bingpai[n] == 1) {
+        } else if (bingpai[n] === 1) {
           const m =
-            s + n == hulepai.slice(0, 2) ? s + n + hulepai[2] + "!" : s + n;
+            s + n === hulepai.slice(0, 2) ? s + n + hulepai[2] + "!" : s + n;
           mianzi.push(m);
         } else return [];
       }
     }
   }
 
-  return n_duizi == 1 ? [mianzi] : [];
+  return n_duizi === 1 ? [mianzi] : [];
 }
 
 function hule_mianzi_jiulian(shoupai: Shoupai, hulepai: Pai): Hulexing[] {
   if (shoupai._fulou.length > 0) return [];
 
   const s = hulepai[0];
-  if (s == "z") return [];
+  if (s === "z") return [];
 
   let mianzi = s as keyof Bingpai;
-  if (mianzi != "_") {
+  if (mianzi !== "_") {
     const bingpai = shoupai._bingpai[mianzi];
     for (let n = 1; n <= 9; n++) {
-      if (bingpai[n] == 0) return [];
-      if ((n == 1 || n == 9) && bingpai[n] < 3) return [];
-      const n_pai = n == parseInt(hulepai[1]) ? bingpai[n] - 1 : bingpai[n];
+      if (bingpai[n] === 0) return [];
+      if ((n === 1 || n === 9) && bingpai[n] < 3) return [];
+      const n_pai = n === parseInt(hulepai[1]) ? bingpai[n] - 1 : bingpai[n];
       for (let i = 0; i < n_pai; i++) {
         mianzi += n;
       }
     }
   }
-  if (mianzi.length != 14) return [];
+  if (mianzi.length !== 14) return [];
   mianzi += hulepai.slice(1) + "!";
 
   return [[mianzi]];
@@ -419,18 +418,18 @@ function get_hudi(mianzi: Hulexing, zhuangfeng: number, menfeng: number): Hudi {
     if (m.match(/[\+\=\-](?!\!)/)) hudi.menqian = false;
     if (m.match(/[\+\=\-]\!/)) hudi.zimo = false;
 
-    if (mianzi.length == 1) continue;
+    if (mianzi.length === 1) continue;
 
     if (m.match(danqi)) hudi.danqi = true;
 
-    if (mianzi.length == 13) continue;
+    if (mianzi.length === 13) continue;
 
     if (m.match(yaojiu)) hudi.n_yaojiu++;
     if (m.match(zipai)) hudi.n_zipai++;
 
-    if (mianzi.length != 5) continue;
+    if (mianzi.length !== 5) continue;
 
-    if (m == mianzi[0]) {
+    if (m === mianzi[0]) {
       let fu = 0;
       if (m.match(zhuangfengpai)) fu += 2;
       if (m.match(menfengpai)) fu += 2;
@@ -453,26 +452,26 @@ function get_hudi(mianzi: Hulexing, zhuangfeng: number, menfeng: number): Hudi {
       }
       hudi.fu += fu;
       const paitstr = m[0] as keyof Bingpai;
-      if (paitstr != "_") hudi.kezi[paitstr][parseInt(m[1])]++;
+      if (paitstr !== "_") hudi.kezi[paitstr][parseInt(m[1])]++;
     } else {
       hudi.n_shunzi++;
       if (m.match(kanzhang)) hudi.fu += 2;
       if (m.match(bianzhang)) hudi.fu += 2;
       const paitstr = m[0] as keyof Bingpai;
-      if (paitstr != "_" && paitstr != "z")
+      if (paitstr !== "_" && paitstr !== "z")
         hudi.shunzi[paitstr][parseInt(m[1])]++;
     }
   }
 
-  if (mianzi.length == 7) {
+  if (mianzi.length === 7) {
     hudi.fu = 25;
-  } else if (mianzi.length == 5) {
-    hudi.pinghu = hudi.menqian && hudi.fu == 20;
+  } else if (mianzi.length === 5) {
+    hudi.pinghu = hudi.menqian && hudi.fu === 20;
     if (hudi.zimo) {
       if (!hudi.pinghu) hudi.fu += 2;
     } else {
       if (hudi.menqian) hudi.fu += 10;
-      else if (hudi.fu == 20) hudi.fu = 30;
+      else if (hudi.fu === 20) hudi.fu = 30;
     }
     hudi.fu = Math.ceil(hudi.fu / 10) * 10;
   }
@@ -483,16 +482,16 @@ function get_hudi(mianzi: Hulexing, zhuangfeng: number, menfeng: number): Hudi {
 function get_pre_hupai(hupai: HuleParam["hupai"]): Huleyi<string>[] {
   let pre_hupai = [];
 
-  if (hupai.lizhi == 1) pre_hupai.push({ name: "立直", fanshu: 1 });
-  if (hupai.lizhi == 2) pre_hupai.push({ name: "ダブル立直", fanshu: 2 });
+  if (hupai.lizhi === 1) pre_hupai.push({ name: "立直", fanshu: 1 });
+  if (hupai.lizhi === 2) pre_hupai.push({ name: "ダブル立直", fanshu: 2 });
   if (hupai.yifa) pre_hupai.push({ name: "一発", fanshu: 1 });
-  if (hupai.haidi == 1) pre_hupai.push({ name: "海底摸月", fanshu: 1 });
-  if (hupai.haidi == 2) pre_hupai.push({ name: "河底撈魚", fanshu: 1 });
+  if (hupai.haidi === 1) pre_hupai.push({ name: "海底摸月", fanshu: 1 });
+  if (hupai.haidi === 2) pre_hupai.push({ name: "河底撈魚", fanshu: 1 });
   if (hupai.lingshang) pre_hupai.push({ name: "嶺上開花", fanshu: 1 });
   if (hupai.qianggang) pre_hupai.push({ name: "槍槓", fanshu: 1 });
 
-  if (hupai.tianhu == 1) pre_hupai = [{ name: "天和", fanshu: "*" }];
-  if (hupai.tianhu == 2) pre_hupai = [{ name: "地和", fanshu: "*" }];
+  if (hupai.tianhu === 1) pre_hupai = [{ name: "天和", fanshu: "*" }];
+  if (hupai.tianhu === 2) pre_hupai = [{ name: "地和", fanshu: "*" }];
 
   return pre_hupai;
 }
@@ -504,11 +503,11 @@ function get_hupai(
   post_hupai: Huleyi<string>[],
   rule: Rule
 ): Huleyi<string>[] {
-  function menqianqing() {
+  function menqianqing(): Huleyi<string>[] {
     if (hudi.menqian && hudi.zimo) return [{ name: "門前清自摸和", fanshu: 1 }];
     return [];
   }
-  function fanpai() {
+  function fanpai(): Huleyi<string>[] {
     const feng_hanzi = ["東", "南", "西", "北"];
     const fanpai_all = [];
     if (hudi.kezi.z[hudi.zhuangfeng + 1])
@@ -523,17 +522,17 @@ function get_hupai(
     if (hudi.kezi.z[7]) fanpai_all.push({ name: "翻牌 中", fanshu: 1 });
     return fanpai_all;
   }
-  function pinghu() {
+  function pinghu(): Huleyi<string>[] {
     if (hudi.pinghu) return [{ name: "平和", fanshu: 1 }];
     return [];
   }
-  function duanyaojiu() {
+  function duanyaojiu(): Huleyi<string>[] {
     if (hudi.n_yaojiu > 0) return [];
     if (rule.enableKuitan || hudi.menqian)
       return [{ name: "断幺九", fanshu: 1 }];
     return [];
   }
-  function yibeikou() {
+  function yibeikou(): Huleyi<string>[] {
     if (!hudi.menqian) return [];
     const shunzi = hudi.shunzi;
     const beikou = shunzi.m
@@ -541,10 +540,10 @@ function get_hupai(
       .concat(shunzi.s)
       .map((x) => x >> 1)
       .reduce((a, b) => a + b);
-    if (beikou == 1) return [{ name: "一盃口", fanshu: 1 }];
+    if (beikou === 1) return [{ name: "一盃口", fanshu: 1 }];
     return [];
   }
-  function sansetongshun() {
+  function sansetongshun(): Huleyi<string>[] {
     const shunzi = hudi.shunzi;
     for (let n = 1; n <= 7; n++) {
       if (shunzi.m[n] && shunzi.p[n] && shunzi.s[n])
@@ -552,39 +551,39 @@ function get_hupai(
     }
     return [];
   }
-  function yiqitongguan() {
+  function yiqitongguan(): Huleyi<string>[] {
     const shunzi = hudi.shunzi;
     for (const s of ["m", "p", "s"]) {
       const paitstr = s as keyof Bingpai;
-      if (paitstr != "_" && paitstr != "z") {
+      if (paitstr !== "_" && paitstr !== "z") {
         if (shunzi[paitstr][1] && shunzi[paitstr][4] && shunzi[paitstr][7])
           return [{ name: "一気通貫", fanshu: hudi.menqian ? 2 : 1 }];
       }
     }
     return [];
   }
-  function hunquandaiyaojiu() {
-    if (hudi.n_yaojiu == 5 && hudi.n_shunzi > 0 && hudi.n_zipai > 0)
+  function hunquandaiyaojiu(): Huleyi<string>[] {
+    if (hudi.n_yaojiu === 5 && hudi.n_shunzi > 0 && hudi.n_zipai > 0)
       return [{ name: "混全帯幺九", fanshu: hudi.menqian ? 2 : 1 }];
     return [];
   }
-  function qiduizi() {
-    if (mianzi.length == 7) return [{ name: "七対子", fanshu: 2 }];
+  function qiduizi(): Huleyi<string>[] {
+    if (mianzi.length === 7) return [{ name: "七対子", fanshu: 2 }];
     return [];
   }
-  function duiduihu() {
-    if (hudi.n_kezi == 4) return [{ name: "対々和", fanshu: 2 }];
+  function duiduihu(): Huleyi<string>[] {
+    if (hudi.n_kezi === 4) return [{ name: "対々和", fanshu: 2 }];
     return [];
   }
-  function sananke() {
-    if (hudi.n_ankezi == 3) return [{ name: "三暗刻", fanshu: 2 }];
+  function sananke(): Huleyi<string>[] {
+    if (hudi.n_ankezi === 3) return [{ name: "三暗刻", fanshu: 2 }];
     return [];
   }
-  function sangangzi() {
-    if (hudi.n_gangzi == 3) return [{ name: "三槓子", fanshu: 2 }];
+  function sangangzi(): Huleyi<string>[] {
+    if (hudi.n_gangzi === 3) return [{ name: "三槓子", fanshu: 2 }];
     return [];
   }
-  function sansetongke() {
+  function sansetongke(): Huleyi<string>[] {
     const kezi = hudi.kezi;
     for (let n = 1; n <= 9; n++) {
       if (kezi.m[n] && kezi.p[n] && kezi.s[n])
@@ -592,38 +591,38 @@ function get_hupai(
     }
     return [];
   }
-  function hunlaotou() {
+  function hunlaotou(): Huleyi<string>[] {
     if (
-      hudi.n_yaojiu == mianzi.length &&
-      hudi.n_shunzi == 0 &&
+      hudi.n_yaojiu === mianzi.length &&
+      hudi.n_shunzi === 0 &&
       hudi.n_zipai > 0
     )
       return [{ name: "混老頭", fanshu: 2 }];
     return [];
   }
-  function xiaosanyuan() {
+  function xiaosanyuan(): Huleyi<string>[] {
     const kezi = hudi.kezi;
-    if (kezi.z[5] + kezi.z[6] + kezi.z[7] == 2 && mianzi[0].match(/^z[567]/))
+    if (kezi.z[5] + kezi.z[6] + kezi.z[7] === 2 && mianzi[0].match(/^z[567]/))
       return [{ name: "小三元", fanshu: 2 }];
     return [];
   }
-  function hunyise() {
+  function hunyise(): Huleyi<string>[] {
     for (const s of ["m", "p", "s"]) {
       const yise = new RegExp(`^[z${s}]`);
       if (
-        mianzi.filter((m) => m.match(yise)).length == mianzi.length &&
+        mianzi.filter((m) => m.match(yise)).length === mianzi.length &&
         hudi.n_zipai > 0
       )
         return [{ name: "混一色", fanshu: hudi.menqian ? 3 : 2 }];
     }
     return [];
   }
-  function chunquandaiyaojiu() {
-    if (hudi.n_yaojiu == 5 && hudi.n_shunzi > 0 && hudi.n_zipai == 0)
+  function chunquandaiyaojiu(): Huleyi<string>[] {
+    if (hudi.n_yaojiu === 5 && hudi.n_shunzi > 0 && hudi.n_zipai === 0)
       return [{ name: "純全帯幺九", fanshu: hudi.menqian ? 3 : 2 }];
     return [];
   }
-  function erbeikou() {
+  function erbeikou(): Huleyi<string>[] {
     if (!hudi.menqian) return [];
     const shunzi = hudi.shunzi;
     const beikou = shunzi.m
@@ -631,31 +630,31 @@ function get_hupai(
       .concat(shunzi.s)
       .map((x) => x >> 1)
       .reduce((a, b) => a + b);
-    if (beikou == 2) return [{ name: "二盃口", fanshu: 3 }];
+    if (beikou === 2) return [{ name: "二盃口", fanshu: 3 }];
     return [];
   }
-  function qingyise() {
+  function qingyise(): Huleyi<string>[] {
     for (const s of ["m", "p", "s"]) {
       const yise = new RegExp(`^[${s}]`);
-      if (mianzi.filter((m) => m.match(yise)).length == mianzi.length)
+      if (mianzi.filter((m) => m.match(yise)).length === mianzi.length)
         return [{ name: "清一色", fanshu: hudi.menqian ? 6 : 5 }];
     }
     return [];
   }
 
-  function guoshiwushuang() {
-    if (mianzi.length != 13) return [];
+  function guoshiwushuang(): Huleyi<string>[] {
+    if (mianzi.length !== 13) return [];
     if (hudi.danqi) return [{ name: "国士無双十三面", fanshu: "**" }];
     else return [{ name: "国士無双", fanshu: "*" }];
   }
-  function sianke() {
-    if (hudi.n_ankezi != 4) return [];
+  function sianke(): Huleyi<string>[] {
+    if (hudi.n_ankezi !== 4) return [];
     if (hudi.danqi) return [{ name: "四暗刻単騎", fanshu: "**" }];
     else return [{ name: "四暗刻", fanshu: "*" }];
   }
-  function dasanyuan() {
+  function dasanyuan(): Huleyi<string>[] {
     const kezi = hudi.kezi;
-    if (kezi.z[5] + kezi.z[6] + kezi.z[7] == 3) {
+    if (kezi.z[5] + kezi.z[6] + kezi.z[7] === 3) {
       const bao_mianzi = mianzi.filter((m) =>
         m.match(/^z([567])\1\1(?:[\+\=\-]|\1)(?!\!)/)
       );
@@ -665,9 +664,9 @@ function get_hupai(
     }
     return [];
   }
-  function sixihu() {
+  function sixihu(): Huleyi<string>[] {
     const kezi = hudi.kezi;
-    if (kezi.z[1] + kezi.z[2] + kezi.z[3] + kezi.z[4] == 4) {
+    if (kezi.z[1] + kezi.z[2] + kezi.z[3] + kezi.z[4] === 4) {
       const bao_mianzi = mianzi.filter((m) =>
         m.match(/^z([1234])\1\1(?:[\+\=\-]|\1)(?!\!)/)
       );
@@ -676,33 +675,33 @@ function get_hupai(
       else return [{ name: "大四喜", fanshu: "**" }];
     }
     if (
-      kezi.z[1] + kezi.z[2] + kezi.z[3] + kezi.z[4] == 3 &&
+      kezi.z[1] + kezi.z[2] + kezi.z[3] + kezi.z[4] === 3 &&
       mianzi[0].match(/^z[1234]/)
     )
       return [{ name: "小四喜", fanshu: "*" }];
     return [];
   }
-  function ziyise() {
-    if (hudi.n_zipai == mianzi.length) return [{ name: "字一色", fanshu: "*" }];
+  function ziyise(): Huleyi<string>[] {
+    if (hudi.n_zipai === mianzi.length) return [{ name: "字一色", fanshu: "*" }];
     return [];
   }
-  function lvyise() {
+  function lvyise(): Huleyi<string>[] {
     if (mianzi.filter((m) => m.match(/^[mp]/)).length > 0) return [];
     if (mianzi.filter((m) => m.match(/^z[^6]/)).length > 0) return [];
     if (mianzi.filter((m) => m.match(/^s.*[1579]/)).length > 0) return [];
     return [{ name: "緑一色", fanshu: "*" }];
   }
-  function qinglaotou() {
-    if (hudi.n_yaojiu == 5 && hudi.n_kezi == 4 && hudi.n_zipai == 0)
+  function qinglaotou(): Huleyi<string>[] {
+    if (hudi.n_yaojiu === 5 && hudi.n_kezi === 4 && hudi.n_zipai === 0)
       return [{ name: "清老頭", fanshu: "*" }];
     return [];
   }
-  function sigangzi() {
-    if (hudi.n_gangzi == 4) return [{ name: "四槓子", fanshu: "*" }];
+  function sigangzi(): Huleyi<string>[] {
+    if (hudi.n_gangzi === 4) return [{ name: "四槓子", fanshu: "*" }];
     return [];
   }
-  function jiulianbaodeng() {
-    if (mianzi.length != 1) return [];
+  function jiulianbaodeng(): Huleyi<string>[] {
+    if (mianzi.length !== 1) return [];
     if (mianzi[0].match(/^[mpsz]1112345678999/))
       return [{ name: "純正九蓮宝燈", fanshu: "**" }];
     else return [{ name: "九蓮宝燈", fanshu: "*" }];
@@ -710,7 +709,7 @@ function get_hupai(
 
   const pre_hupaiY = pre_hupai as Yiman<string>[];
   let damanguan: Huleyi<string>[] =
-    pre_hupai.length > 0 && pre_hupaiY[0].fanshu[0] == "*" ? pre_hupaiY : [];
+    pre_hupai.length > 0 && pre_hupaiY[0].fanshu[0] === "*" ? pre_hupaiY : [];
   damanguan = damanguan
     .concat(guoshiwushuang())
     .concat(sianke())
@@ -777,7 +776,7 @@ function get_post_hupai(
     p = Shan.zhenbaopai(p);
     const regexp = new RegExp(p[1], "g");
     for (let m of suitstr) {
-      if (m[0] != p[0]) continue;
+      if (m[0] !== p[0]) continue;
       m = m.replace(/0/, "5");
       const nn = m.match(regexp);
       if (nn) n_baopai += nn.length;
@@ -795,7 +794,7 @@ function get_post_hupai(
     p = Shan.zhenbaopai(p);
     const regexp = new RegExp(p[1], "g");
     for (let m of suitstr) {
-      if (m[0] != p[0]) continue;
+      if (m[0] !== p[0]) continue;
       m = m.replace(/0/, "5");
       const nn = m.match(regexp);
       if (nn) n_fubaopai += nn.length;
@@ -812,12 +811,12 @@ function get_defen(
   rongpai: string,
   param: HuleParam
 ): Partial<HuleResult> {
-  if (hupai.length == 0) return { defen: 0 };
+  if (hupai.length === 0) return { defen: 0 };
 
   const menfeng = param.menfeng;
   let fanshu, damanguan, defen, base, baojia, defen2, base2, baojia2;
 
-  if (typeof hupai[0].fanshu === "string" && hupai[0].fanshu[0] == "*") {
+  if (typeof hupai[0].fanshu === "string" && hupai[0].fanshu[0] === "*") {
     fu = undefined;
     const hupaiY = hupai as Yiman<string>[];
     damanguan = !param.rule.enableYakumanComposite
@@ -842,7 +841,7 @@ function get_defen(
         ? 4000
         : fanshu >= 6
         ? 3000
-        : param.rule.enableRoundUpMangan && fu << (2 + fanshu) == 1920
+        : param.rule.enableRoundUpMangan && fu << (2 + fanshu) === 1920
         ? 2000
         : Math.min(fu << (2 + fanshu), 2000);
   }
@@ -854,33 +853,33 @@ function get_defen(
   if (baojia2 != null) {
     if (rongpai) base2 = base2 / 2;
     base = base - base2;
-    defen2 = base2 * (menfeng == 0 ? 6 : 4);
+    defen2 = base2 * (menfeng === 0 ? 6 : 4);
     fenpei[menfeng] += defen2;
     fenpei[baojia2] -= defen2;
   } else defen2 = 0;
 
-  if (rongpai || base == 0) {
+  if (rongpai || base === 0) {
     baojia =
-      base == 0
+      base === 0
         ? baojia2
         : (menfeng + { "+": 1, "=": 2, "-": 3 }[rongpai[2]]) % 4;
-    defen = Math.ceil((base * (menfeng == 0 ? 6 : 4)) / 100) * 100;
+    defen = Math.ceil((base * (menfeng === 0 ? 6 : 4)) / 100) * 100;
     fenpei[menfeng] += defen + chang * 300 + lizhi * 1000;
     fenpei[baojia] -= defen + chang * 300;
   } else {
     const zhuangjia = Math.ceil((base * 2) / 100) * 100;
     const sanjia = Math.ceil(base / 100) * 100;
-    if (menfeng == 0) {
+    if (menfeng === 0) {
       defen = zhuangjia * 3;
       for (let l = 0; l < 4; l++) {
-        if (l == menfeng) fenpei[l] += defen + chang * 300 + lizhi * 1000;
+        if (l === menfeng) fenpei[l] += defen + chang * 300 + lizhi * 1000;
         else fenpei[l] -= zhuangjia + chang * 100;
       }
     } else {
       defen = zhuangjia + sanjia * 2;
       for (let l = 0; l < 4; l++) {
-        if (l == menfeng) fenpei[l] += defen + chang * 300 + lizhi * 1000;
-        else if (l == 0) fenpei[l] -= zhuangjia + chang * 100;
+        if (l === menfeng) fenpei[l] += defen + chang * 300 + lizhi * 1000;
+        else if (l === 0) fenpei[l] -= zhuangjia + chang * 100;
         else fenpei[l] -= sanjia + chang * 100;
       }
     }
@@ -938,10 +937,10 @@ export function hule(
     if (
       !max ||
       rv.defen > max.defen ||
-      (rv.defen == max.defen &&
+      (rv.defen === max.defen &&
         (!rv.fanshu ||
           rv.fanshu > max.fanshu ||
-          (rv.fanshu == max.fanshu && rv.fu > max.fu)) &&
+          (rv.fanshu === max.fanshu && rv.fu > max.fu)) &&
         rv.hupai)
     ) {
       max = {

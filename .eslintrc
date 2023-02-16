@@ -7,5 +7,9 @@
   "parserOptions": {
       "project": "tsconfig.json",
       "sourceType": "module"
+  },
+  "rules": {
+    "radix": 0,
+    "@typescript-eslint/naming-convention": 0
   }
 }
