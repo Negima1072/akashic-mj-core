@@ -13,8 +13,13 @@ $ akashic install @negima1072/akashic-mj-core
 
 ## 使用法
 
-```javascript
+```typescript
 import { Game, Shoupai } from '@negima1072/mj-core';
+```
+
+```typescript
+import * as Mahjong from '@negima1072/mj-core';
+//Mahjong.Game, Mahjong.Shoupai
 ```
 
 ## 変更点
