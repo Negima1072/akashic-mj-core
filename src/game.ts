@@ -2,10 +2,10 @@
  * Mahjong.Game
  */
 
-import { BoardInfo } from "boardInfo";
-import { Hule, Huleyi, Menzi, Moda, Pai, Paipu, Paizi } from "data";
+import type { BoardInfo } from "boardInfo";
+import type { Hule, Huleyi, Menzi, Moda, Pai, Paipu, Paizi } from "data";
 import { He } from "he";
-import {
+import type {
   DapaiPlayerMessage,
   EmptyPlayerMessage,
   FulouPlayerMessage,
@@ -13,11 +13,13 @@ import {
   GangPlayerMessage,
   PlayerMessage,
 } from "message";
-import { Player } from "player";
-import { Rule, rule as makeRule } from "rule";
+import type { Player } from "player";
+import type { Rule} from "rule";
+import { rule as makeRule } from "rule";
 import { Shan } from "shan";
-import { Bingpai, Shoupai } from "shoupai";
-import { View } from "view";
+import type { Bingpai} from "shoupai";
+import { Shoupai } from "shoupai";
+import type { View } from "view";
 import * as Util from "./util";
 
 /** 対局終了時に呼ばれた関数 */
@@ -60,7 +62,7 @@ export class Game {
       jushu: 0,
       changbang: 0,
       lizhibang: 0,
-      defen: [0, 0, 0, 0].map((x) => this._rule["originPoint"]),
+      defen: [0, 0, 0, 0].map(() => this._rule.originPoint),
       shan: null,
       shoupai: [],
       he: [],
@@ -82,17 +84,17 @@ export class Game {
    * @returns 打牌可能な{@link Pai | 牌}の配列
    */
   static get_dapai(rule: Rule, shoupai: Shoupai): Pai[] | null {
-    if (rule["kuikaeAllowLevel"] == 0) return shoupai.get_dapai(true);
+    if (rule.kuikaeAllowLevel === 0) return shoupai.get_dapai(true);
     if (
-      rule["kuikaeAllowLevel"] == 1 &&
+      rule.kuikaeAllowLevel === 1 &&
       shoupai._zimo &&
       shoupai._zimo.length > 2
     ) {
-      let deny =
+      const deny =
         shoupai._zimo[0] + (+shoupai._zimo.match(/\d(?=[\+\=\-])/) || 5);
       return shoupai
         .get_dapai(false)
-        .filter((p) => p.replace(/0/, "5") != deny);
+        .filter((p) => p.replace(/0/, "5") !== deny);
     }
     return shoupai.get_dapai(false);
   }
@@ -111,17 +113,17 @@ export class Game {
     p: Pai,
     paishu: number
   ): Menzi[] {
-    let mianzi = shoupai.get_chi_mianzi(p, rule["kuikaeAllowLevel"] == 0);
-    let paitstr = p[0] as keyof Bingpai;
+    let mianzi = shoupai.get_chi_mianzi(p, rule.kuikaeAllowLevel === 0);
+    const paitstr = p[0] as keyof Bingpai;
     if (!mianzi) return mianzi;
     if (
-      rule["kuikaeAllowLevel"] == 1 &&
-      shoupai._fulou.length == 3 &&
-      paitstr != "_" &&
-      shoupai._bingpai[paitstr][parseInt(p[1])] == 2
+      rule.kuikaeAllowLevel === 1 &&
+      shoupai._fulou.length === 3 &&
+      paitstr !== "_" &&
+      shoupai._bingpai[paitstr][parseInt(p[1])] === 2
     )
       mianzi = [];
-    return paishu == 0 ? [] : mianzi;
+    return paishu === 0 ? [] : mianzi;
   }
 
   /**
@@ -133,14 +135,13 @@ export class Game {
    * @returns ポン可能な{@link Menzi | 面子}の配列
    */
   static get_peng_mianzi(
-    rule: Rule,
     shoupai: Shoupai,
     p: Pai,
     paishu: number
   ): Menzi[] {
-    let mianzi = shoupai.get_peng_mianzi(p);
+    const mianzi = shoupai.get_peng_mianzi(p);
     if (!mianzi) return mianzi;
-    return paishu == 0 ? [] : mianzi;
+    return paishu === 0 ? [] : mianzi;
   }
 
   /**
@@ -159,35 +160,35 @@ export class Game {
     paishu: number,
     n_gang?: number
   ): Menzi[] {
-    let mianzi = shoupai.get_gang_mianzi(p);
-    if (!mianzi || mianzi.length == 0) return mianzi;
+    const mianzi = shoupai.get_gang_mianzi(p);
+    if (!mianzi || mianzi.length === 0) return mianzi;
 
     if (shoupai.lizhi) {
-      if (rule["ankanAfterReachAllowLevel"] == 0) return [];
-      else if (rule["ankanAfterReachAllowLevel"] == 1) {
+      if (rule.ankanAfterReachAllowLevel === 0) return [];
+      else if (rule.ankanAfterReachAllowLevel === 1) {
         let new_shoupai,
           n_hule1 = 0,
           n_hule2 = 0;
         new_shoupai = shoupai.clone().dapai(shoupai._zimo);
-        for (let p of Util.tingpai(new_shoupai)) {
+        for (const p of Util.tingpai(new_shoupai)) {
           n_hule1 += Util.hule_mianzi(new_shoupai, p).length;
         }
         new_shoupai = shoupai.clone().gang(mianzi[0]);
-        for (let p of Util.tingpai(new_shoupai)) {
+        for (const p of Util.tingpai(new_shoupai)) {
           n_hule2 += Util.hule_mianzi(new_shoupai, p).length;
         }
         if (n_hule1 > n_hule2) return [];
       } else {
         let new_shoupai;
         new_shoupai = shoupai.clone().dapai(shoupai._zimo);
-        let n_tingpai1 = Util.tingpai(new_shoupai).length;
+        const n_tingpai1 = Util.tingpai(new_shoupai).length;
         new_shoupai = shoupai.clone().gang(mianzi[0]);
         if (Util.xiangting(new_shoupai) > 0) return [];
-        let n_tingpai2 = Util.tingpai(new_shoupai).length;
+        const n_tingpai2 = Util.tingpai(new_shoupai).length;
         if (n_tingpai1 > n_tingpai2) return [];
       }
     }
-    return paishu == 0 || n_gang == 4 ? [] : mianzi;
+    return paishu === 0 || n_gang === 4 ? [] : mianzi;
   }
 
   /**
@@ -210,22 +211,22 @@ export class Game {
     if (shoupai.lizhi) return false;
     if (!shoupai.menqian) return false;
 
-    if (!rule["enableRiichiWithoutTurn"] && paishu < 4) return false;
-    if (rule["enableTobiEnd"] && defen < 1000) return false;
+    if (!rule.enableRiichiWithoutTurn && paishu < 4) return false;
+    if (rule.enableTobiEnd && defen < 1000) return false;
 
     if (Util.xiangting(shoupai) > 0) return false;
 
     if (p) {
-      let new_shoupai = shoupai.clone().dapai(p);
+      const new_shoupai = shoupai.clone().dapai(p);
       return (
-        Util.xiangting(new_shoupai) == 0 && Util.tingpai(new_shoupai).length > 0
+        Util.xiangting(new_shoupai) === 0 && Util.tingpai(new_shoupai).length > 0
       );
     } else {
-      let dapai = [];
-      for (let p of Game.get_dapai(rule, shoupai)) {
-        let new_shoupai = shoupai.clone().dapai(p);
+      const dapai = [];
+      for (const p of Game.get_dapai(rule, shoupai)) {
+        const new_shoupai = shoupai.clone().dapai(p);
         if (
-          Util.xiangting(new_shoupai) == 0 &&
+          Util.xiangting(new_shoupai) === 0 &&
           Util.tingpai(new_shoupai).length > 0
         ) {
           dapai.push(p);
@@ -257,13 +258,13 @@ export class Game {
   ): boolean {
     if (p && !neng_rong) return false;
 
-    let new_shoupai = shoupai.clone();
+    const new_shoupai = shoupai.clone();
     if (p) new_shoupai.zimo(p);
-    if (Util.xiangting(new_shoupai) != -1) return false;
+    if (Util.xiangting(new_shoupai) !== -1) return false;
 
     if (hupai) return true;
 
-    let param: Util.HuleParam = {
+    const param: Util.HuleParam = {
       rule: rule,
       zhuangfeng: zhuangfeng,
       menfeng: menfeng,
@@ -272,7 +273,7 @@ export class Game {
       jicun: { changbang: 0, lizhibang: 0 },
       fubaopai: [],
     };
-    let hule = Util.hule(shoupai, p, param);
+    const hule = Util.hule(shoupai, p, param);
 
     return hule.hupai != null;
   }
@@ -289,15 +290,15 @@ export class Game {
     diyizimo: boolean
   ): boolean {
     if (!(diyizimo && shoupai._zimo)) return false;
-    if (!rule["enableInterruptedGame"]) return false;
+    if (!rule.enableInterruptedGame) return false;
 
     let n_yaojiu = 0;
-    for (let s of ["m", "p", "s", "z"]) {
-      let paitstr = s as keyof Bingpai;
-      if (paitstr != "_") {
-        let bingpai = shoupai._bingpai[paitstr];
-        let nn = s == "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
-        for (let n of nn) {
+    for (const s of ["m", "p", "s", "z"]) {
+      const paitstr = s as keyof Bingpai;
+      if (paitstr !== "_") {
+        const bingpai = shoupai._bingpai[paitstr];
+        const nn = s === "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
+        for (const n of nn) {
           if (bingpai[n] > 0) n_yaojiu++;
         }
       }
@@ -317,10 +318,10 @@ export class Game {
     paishu: number
   ): boolean {
     if (paishu > 0 || shoupai._zimo) return false;
-    if (!rule["enableNoTenDeclared"]) return false;
+    if (!rule.enableNoTenDeclared) return false;
     if (shoupai.lizhi) return false;
 
-    return Util.xiangting(shoupai) == 0 && Util.tingpai(shoupai).length > 0;
+    return Util.xiangting(shoupai) === 0 && Util.tingpai(shoupai).length > 0;
   }
 
   /**
@@ -495,7 +496,7 @@ export class Game {
     this._model.qijia = qijia ?? Math.floor(g.game.random.generate() * 4);
 
     this._max_jushu =
-      this._rule["gameCount"] == 0 ? 0 : this._rule["gameCount"] * 4 - 1;
+      this._rule.gameCount === 0 ? 0 : this._rule.gameCount * 4 - 1;
 
     this._paipu = {
       title: this._model.title,
@@ -507,7 +508,7 @@ export class Game {
       rank: [],
     };
 
-    let msg = [];
+    const msg = [];
     for (let id = 0; id < 4; id++) {
       msg[id] = JSON.parse(
         JSON.stringify({
@@ -565,15 +566,15 @@ export class Game {
     this.kaiju();
 
     for (;;) {
-      if (this._status == "kaiju") this.reply_kaiju();
-      else if (this._status == "qipai") this.reply_qipai();
-      else if (this._status == "zimo") this.reply_zimo();
-      else if (this._status == "dapai") this.reply_dapai();
-      else if (this._status == "fulou") this.reply_fulou();
-      else if (this._status == "gang") this.reply_gang();
-      else if (this._status == "gangzimo") this.reply_zimo();
-      else if (this._status == "hule") this.reply_hule();
-      else if (this._status == "pingju") this.reply_pingju();
+      if (this._status === "kaiju") this.reply_kaiju();
+      else if (this._status === "qipai") this.reply_qipai();
+      else if (this._status === "zimo") this.reply_zimo();
+      else if (this._status === "dapai") this.reply_dapai();
+      else if (this._status === "fulou") this.reply_fulou();
+      else if (this._status === "gang") this.reply_gang();
+      else if (this._status === "gangzimo") this.reply_zimo();
+      else if (this._status === "hule") this.reply_hule();
+      else if (this._status === "pingju") this.reply_pingju();
       else break;
     }
 
@@ -634,15 +635,15 @@ export class Game {
     if (this._reply.filter((x) => x).length < 4) return;
     if (this._stop) return this._stop();
 
-    if (this._status == "kaiju") this.reply_kaiju();
-    else if (this._status == "qipai") this.reply_qipai();
-    else if (this._status == "zimo") this.reply_zimo();
-    else if (this._status == "dapai") this.reply_dapai();
-    else if (this._status == "fulou") this.reply_fulou();
-    else if (this._status == "gang") this.reply_gang();
-    else if (this._status == "gangzimo") this.reply_zimo();
-    else if (this._status == "hule") this.reply_hule();
-    else if (this._status == "pingju") this.reply_pingju();
+    if (this._status === "kaiju") this.reply_kaiju();
+    else if (this._status === "qipai") this.reply_qipai();
+    else if (this._status === "zimo") this.reply_zimo();
+    else if (this._status === "dapai") this.reply_dapai();
+    else if (this._status === "fulou") this.reply_fulou();
+    else if (this._status === "gang") this.reply_gang();
+    else if (this._status === "gangzimo") this.reply_zimo();
+    else if (this._status === "hule") this.reply_hule();
+    else if (this._status === "pingju") this.reply_pingju();
     else this._callback(this._paipu);
   }
 
@@ -652,9 +653,9 @@ export class Game {
    * @param msg {@link GameMessage | メッセージ}
    * @internal
    */
-  notify_players(type: string, msg: GameMessage[]): void {
+  notify_players(msg: GameMessage[]): void {
     for (let l = 0; l < 4; l++) {
-      let id = this._model.player_id[l];
+      const id = this._model.player_id[l];
       if (this._sync) this._players[id].action(msg[l]);
       else
         setTimeout(() => {
@@ -675,11 +676,11 @@ export class Game {
    */
   call_players(type: string, msg: GameMessage[], timeout?: number): void {
     timeout =
-      this._speed == 0 ? 0 : timeout == null ? this._speed * 200 : timeout;
+      this._speed === 0 ? 0 : timeout == null ? this._speed * 200 : timeout;
     this._status = type;
     this._reply = [];
     for (let l = 0; l < 4; l++) {
-      let id = this._model.player_id[l];
+      const id = this._model.player_id[l];
       if (this._sync)
         this._players[id].action(msg[l], (reply) => this.reply(id, reply));
       else
@@ -696,11 +697,11 @@ export class Game {
    * @internal
    */
   qipai(shan?: Shan): void {
-    let model = this._model;
+    const model = this._model;
 
     model.shan = shan || new Shan(this._rule);
     for (let l = 0; l < 4; l++) {
-      let qipai = [];
+      const qipai = [];
       for (let i = 0; i < 13; i++) {
         qipai.push(model.shan.zimo());
       }
@@ -711,7 +712,7 @@ export class Game {
     model.lunban = -1;
 
     this._diyizimo = true;
-    this._fengpai = this._rule["enableInterruptedGame"];
+    this._fengpai = this._rule.enableInterruptedGame;
 
     this._dapai = null;
     this._gang = null;
@@ -730,7 +731,7 @@ export class Game {
 
     this._paipu.defen = model.defen.concat();
     this._paipu.log.push([]);
-    let paipu = {
+    const paipu = {
       qipai: {
         zhuangfeng: model.zhuangfeng,
         jushu: model.jushu,
@@ -743,11 +744,11 @@ export class Game {
     };
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
       for (let i = 0; i < 4; i++) {
-        if (i != l) msg[l].qipai.shoupai[i] = "";
+        if (i !== l) msg[l].qipai.shoupai[i] = "";
       }
     }
     this.call_players("qipai", msg, 0);
@@ -760,20 +761,20 @@ export class Game {
    * @internal
    */
   zimo(): void {
-    let model = this._model;
+    const model = this._model;
 
     model.lunban = (model.lunban + 1) % 4;
 
-    let zimo = model.shan.zimo();
+    const zimo = model.shan.zimo();
     model.shoupai[model.lunban].zimo(zimo);
 
-    let paipu = { zimo: { l: model.lunban, p: zimo } };
+    const paipu = { zimo: { l: model.lunban, p: zimo } };
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
-      if (l != model.lunban) msg[l].zimo.p = "";
+      if (l !== model.lunban) msg[l].zimo.p = "";
     }
     this.call_players("zimo", msg);
 
@@ -786,7 +787,7 @@ export class Game {
    * @internal
    */
   dapai(dapai: Pai): void {
-    let model = this._model;
+    const model = this._model;
 
     this._yifa[model.lunban] = false;
 
@@ -798,17 +799,17 @@ export class Game {
 
     if (this._diyizimo) {
       if (!dapai.match(/^z[1234]/)) this._fengpai = false;
-      if (this._dapai && this._dapai.slice(0, 2) != dapai.substr(0, 2))
+      if (this._dapai && this._dapai.slice(0, 2) !== dapai.substr(0, 2))
         this._fengpai = false;
     } else this._fengpai = false;
 
-    if (dapai.slice(-1) == "*") {
+    if (dapai.slice(-1) === "*") {
       this._lizhi[model.lunban] = this._diyizimo ? 2 : 1;
-      this._yifa[model.lunban] = this._rule["enableIppatsu"];
+      this._yifa[model.lunban] = this._rule.enableIppatsu;
     }
 
     if (
-      Util.xiangting(model.shoupai[model.lunban]) == 0 &&
+      Util.xiangting(model.shoupai[model.lunban]) === 0 &&
       Util.tingpai(model.shoupai[model.lunban]).find((p) =>
         model.he[model.lunban].find(p)
       )
@@ -818,12 +819,12 @@ export class Game {
 
     this._dapai = dapai;
 
-    let paipu = { dapai: { l: model.lunban, p: dapai } };
+    const paipu = { dapai: { l: model.lunban, p: dapai } };
     this.add_paipu(paipu);
 
     if (this._gang) this.kaigang();
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -838,14 +839,14 @@ export class Game {
    * @internal
    */
   fulou(fulou: Menzi): void {
-    let model = this._model;
+    const model = this._model;
 
     this._diyizimo = false;
     this._yifa = [false, false, false, false];
 
     model.he[model.lunban].fulou(fulou);
 
-    let d = fulou.match(/[\+\=\-]/);
+    const d = fulou.match(/[\+\=\-]/);
     model.lunban = (model.lunban + "_-=+".indexOf(d[0])) % 4;
 
     model.shoupai[model.lunban].fulou(fulou);
@@ -855,10 +856,10 @@ export class Game {
       this._n_gang[model.lunban]++;
     }
 
-    let paipu = { fulou: { l: model.lunban, m: fulou } };
+    const paipu = { fulou: { l: model.lunban, m: fulou } };
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -873,11 +874,11 @@ export class Game {
    * @internal
    */
   gang(gang: Menzi): void {
-    let model = this._model;
+    const model = this._model;
 
     model.shoupai[model.lunban].gang(gang);
 
-    let paipu = { gang: { l: model.lunban, m: gang } };
+    const paipu = { gang: { l: model.lunban, m: gang } };
     this.add_paipu(paipu);
 
     if (this._gang) this.kaigang();
@@ -885,7 +886,7 @@ export class Game {
     this._gang = gang;
     this._n_gang[model.lunban]++;
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -899,27 +900,27 @@ export class Game {
    * @internal
    */
   gangzimo(): void {
-    let model = this._model;
+    const model = this._model;
 
     this._diyizimo = false;
     this._yifa = [false, false, false, false];
 
-    let zimo = model.shan.gangzimo();
+    const zimo = model.shan.gangzimo();
     model.shoupai[model.lunban].zimo(zimo);
 
-    let paipu = { gangzimo: { l: model.lunban, p: zimo } };
+    const paipu = { gangzimo: { l: model.lunban, p: zimo } };
     this.add_paipu(paipu);
 
     if (
-      !this._rule["enableKandoraAfterRide"] ||
+      !this._rule.enableKandoraAfterRide ||
       this._gang.match(/^[mpsz]\d{4}$/)
     )
       this.kaigang();
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
-      if (l != model.lunban) msg[l].gangzimo.p = "";
+      if (l !== model.lunban) msg[l].gangzimo.p = "";
     }
     this.call_players("gangzimo", msg);
 
@@ -933,21 +934,21 @@ export class Game {
   kaigang(): void {
     this._gang = null;
 
-    if (!this._rule["enableKandora"]) return;
+    if (!this._rule.enableKandora) return;
 
-    let model = this._model;
+    const model = this._model;
 
     model.shan.kaigang();
-    let baopai = model.shan.baopai.pop();
+    const baopai = model.shan.baopai.pop();
 
-    let paipu = { kaigang: { baopai: baopai } };
+    const paipu = { kaigang: { baopai: baopai } };
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
-    this.notify_players("kaigang", msg);
+    this.notify_players(msg);
 
     if (this._view) this._view.update(paipu);
   }
@@ -957,55 +958,55 @@ export class Game {
    * @internal
    */
   hule(): void {
-    let model = this._model;
+    const model = this._model;
 
-    if (this._status != "hule") {
+    if (this._status !== "hule") {
       model.shan.close();
       this._hule_option =
-        this._status == "gang"
+        this._status === "gang"
           ? "qianggang"
-          : this._status == "gangzimo"
+          : this._status === "gangzimo"
           ? "lingshang"
           : null;
     }
 
-    let menfeng = this._hule.length ? this._hule.shift() : model.lunban;
-    let rongpai =
-      menfeng == model.lunban
+    const menfeng = this._hule.length ? this._hule.shift() : model.lunban;
+    const rongpai =
+      menfeng === model.lunban
         ? null
-        : (this._hule_option == "qianggang"
+        : (this._hule_option === "qianggang"
             ? this._gang[0] + this._gang.slice(-1)
             : this._dapai.slice(0, 2)) +
           "_+=-"[(4 + model.lunban - menfeng) % 4];
-    let shoupai = model.shoupai[menfeng].clone();
-    let fubaopai = shoupai.lizhi ? model.shan.fubaopai : null;
+    const shoupai = model.shoupai[menfeng].clone();
+    const fubaopai = shoupai.lizhi ? model.shan.fubaopai : null;
 
-    let param = {
+    const param = {
       rule: this._rule,
       zhuangfeng: model.zhuangfeng,
       menfeng: menfeng,
       hupai: {
         lizhi: this._lizhi[menfeng],
         yifa: this._yifa[menfeng],
-        qianggang: this._hule_option == "qianggang",
-        lingshang: this._hule_option == "lingshang",
+        qianggang: this._hule_option === "qianggang",
+        lingshang: this._hule_option === "lingshang",
         haidi:
-          model.shan.paishu > 0 || this._hule_option == "lingshang"
+          model.shan.paishu > 0 || this._hule_option === "lingshang"
             ? 0
             : !rongpai
             ? 1
             : 2,
-        tianhu: !(this._diyizimo && !rongpai) ? 0 : menfeng == 0 ? 1 : 2,
+        tianhu: !(this._diyizimo && !rongpai) ? 0 : menfeng === 0 ? 1 : 2,
       },
       baopai: model.shan.baopai,
       fubaopai: fubaopai,
       jicun: { changbang: model.changbang, lizhibang: model.lizhibang },
     };
-    let hule = Util.hule(shoupai, rongpai, param);
+    const hule = Util.hule(shoupai, rongpai, param);
 
-    if (this._rule["consecutiveMode"] > 0 && menfeng == 0)
+    if (this._rule.consecutiveMode > 0 && menfeng === 0)
       this._lianzhuang = true;
-    if (this._rule["gameCount"] == 0) this._lianzhuang = false;
+    if (this._rule.gameCount === 0) this._lianzhuang = false;
     this._fenpei = hule.fenpei;
 
     function parseBaojiaStr2Int(baojia: string): number {
@@ -1014,7 +1015,7 @@ export class Game {
       if (baojia === "+") return (menfeng + 3) % 4;
     }
 
-    let paipu: Hule = {
+    const paipu: Hule = {
       hule: {
         l: menfeng,
         shoupai: rongpai
@@ -1050,13 +1051,13 @@ export class Game {
         fenpei: hule.fenpei,
       },
     };
-    for (let key of ["fu", "fanshu", "damanguan"]) {
-      let keyT = key as "fu" | "fanshu" | "damanguan";
+    for (const key of ["fu", "fanshu", "damanguan"]) {
+      const keyT = key as "fu" | "fanshu" | "damanguan";
       if (!paipu.hule[keyT]) delete paipu.hule[keyT];
     }
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -1072,41 +1073,41 @@ export class Game {
    * @internal
    */
   pingju(name: string, shoupai?: Paizi[]): void {
-    let model = this._model;
+    const model = this._model;
 
-    let fenpei = [0, 0, 0, 0];
+    const fenpei = [0, 0, 0, 0];
 
     if (!name) {
       let n_tingpai = 0;
       for (let l = 0; l < 4; l++) {
         if (
-          this._rule["enableNoTenDeclared"] &&
+          this._rule.enableNoTenDeclared &&
           !shoupai[l] &&
           !model.shoupai[l].lizhi
         )
           continue;
         if (
-          !this._rule["enableNoTenPenalty"] &&
-          (this._rule["consecutiveMode"] != 2 || l != 0) &&
+          !this._rule.enableNoTenPenalty &&
+          (this._rule.consecutiveMode !== 2 || l !== 0) &&
           !model.shoupai[l].lizhi
         ) {
           shoupai[l] = "";
         } else if (
-          Util.xiangting(model.shoupai[l]) == 0 &&
+          Util.xiangting(model.shoupai[l]) === 0 &&
           Util.tingpai(model.shoupai[l]).length > 0
         ) {
           n_tingpai++;
           shoupai[l] = model.shoupai[l].toString();
-          if (this._rule["consecutiveMode"] == 2 && l == 0)
+          if (this._rule.consecutiveMode === 2 && l === 0)
             this._lianzhuang = true;
         } else {
           shoupai[l] = "";
         }
       }
-      if (this._rule["enableNagashi"]) {
+      if (this._rule.enableNagashi) {
         for (let l = 0; l < 4; l++) {
           let all_yaojiu = true;
-          for (let p of model.he[l]._pai) {
+          for (const p of model.he[l]._pai) {
             if (p.match(/[\+\=\-]$/)) {
               all_yaojiu = false;
               break;
@@ -1120,13 +1121,13 @@ export class Game {
             name = "流し満貫";
             for (let i = 0; i < 4; i++) {
               fenpei[i] +=
-                l == 0 && i == l
+                l === 0 && i === l
                   ? 12000
-                  : l == 0
+                  : l === 0
                   ? -4000
-                  : l != 0 && i == l
+                  : l !== 0 && i === l
                   ? 8000
-                  : l != 0 && i == 0
+                  : l !== 0 && i === 0
                   ? -4000
                   : -2000;
             }
@@ -1136,7 +1137,7 @@ export class Game {
       if (!name) {
         name = "荒牌平局";
         if (
-          this._rule["enableNoTenPenalty"] &&
+          this._rule.enableNoTenPenalty &&
           0 < n_tingpai &&
           n_tingpai < 4
         ) {
@@ -1145,22 +1146,22 @@ export class Game {
           }
         }
       }
-      if (this._rule["consecutiveMode"] == 3) this._lianzhuang = true;
+      if (this._rule.consecutiveMode === 3) this._lianzhuang = true;
     } else {
       this._no_game = true;
       this._lianzhuang = true;
     }
 
-    if (this._rule["gameCount"] == 0) this._lianzhuang = true;
+    if (this._rule.gameCount === 0) this._lianzhuang = true;
 
     this._fenpei = fenpei;
 
-    let paipu = {
+    const paipu = {
       pingju: { name: name, shoupai: shoupai, fenpei: fenpei },
     };
     this.add_paipu(paipu);
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -1174,7 +1175,7 @@ export class Game {
    * @internal
    */
   last(): void {
-    let model = this._model;
+    const model = this._model;
 
     model.lunban = -1;
     if (this._view) this._view.update();
@@ -1189,32 +1190,32 @@ export class Game {
     let guanjun = -1;
     const defen = model.defen;
     for (let i = 0; i < 4; i++) {
-      let id = (model.qijia + i) % 4;
-      if (defen[id] < 0 && this._rule["enableTobiEnd"]) jieju = true;
+      const id = (model.qijia + i) % 4;
+      if (defen[id] < 0 && this._rule.enableTobiEnd) jieju = true;
       if (defen[id] >= 30000 && (guanjun < 0 || defen[id] > defen[guanjun]))
         guanjun = id;
     }
 
-    let sum_jushu = model.zhuangfeng * 4 + model.jushu;
+    const sum_jushu = model.zhuangfeng * 4 + model.jushu;
 
     if (15 < sum_jushu) jieju = true;
-    else if ((this._rule["gameCount"] + 1) * 4 - 1 < sum_jushu) jieju = true;
+    else if ((this._rule.gameCount + 1) * 4 - 1 < sum_jushu) jieju = true;
     else if (this._max_jushu < sum_jushu) {
-      if (this._rule["extensionMode"] == 0) jieju = true;
-      else if (this._rule["gameCount"] == 0) jieju = true;
+      if (this._rule.extensionMode === 0) jieju = true;
+      else if (this._rule.gameCount === 0) jieju = true;
       else if (guanjun >= 0) jieju = true;
       else {
         this._max_jushu +=
-          this._rule["extensionMode"] == 3
+          this._rule.extensionMode === 3
             ? 4
-            : this._rule["extensionMode"] == 2
+            : this._rule.extensionMode === 2
             ? 1
             : 0;
       }
-    } else if (this._max_jushu == sum_jushu) {
+    } else if (this._max_jushu === sum_jushu) {
       if (
-        this._rule["enableOralasStopped"] &&
-        guanjun == model.player_id[0] &&
+        this._rule.enableOralasStopped &&
+        guanjun === model.player_id[0] &&
         this._lianzhuang &&
         !this._no_game
       )
@@ -1230,14 +1231,14 @@ export class Game {
    * @internal
    */
   jieju(): void {
-    let model = this._model;
+    const model = this._model;
 
-    let paiming: number[] = [];
+    const paiming: number[] = [];
     const defen = model.defen;
     for (let i = 0; i < 4; i++) {
-      let id = (model.qijia + i) % 4;
+      const id = (model.qijia + i) % 4;
       for (let j = 0; j < 4; j++) {
-        if (j == paiming.length || defen[id] > defen[paiming[j]]) {
+        if (j === paiming.length || defen[id] > defen[paiming[j]]) {
           paiming.splice(j, 0, id);
           break;
         }
@@ -1246,25 +1247,25 @@ export class Game {
     defen[paiming[0]] += model.lizhibang * 1000;
     this._paipu.defen = defen;
 
-    let rank = [0, 0, 0, 0];
+    const rank = [0, 0, 0, 0];
     for (let i = 0; i < 4; i++) {
       rank[paiming[i]] = i + 1;
     }
     this._paipu.rank = rank;
 
-    const round = !this._rule["rankPoint"].find((p) => p.match(/\.\d$/));
-    let point = [0, 0, 0, 0];
+    const round = !this._rule.rankPoint.find((p) => p.match(/\.\d$/));
+    const point = [0, 0, 0, 0];
     for (let i = 1; i < 4; i++) {
-      let id = paiming[i];
-      point[id] = (defen[id] - 30000) / 1000 + +this._rule["rankPoint"][i];
+      const id = paiming[i];
+      point[id] = (defen[id] - 30000) / 1000 + +this._rule.rankPoint[i];
       if (round) point[id] = Math.round(point[id]);
       point[paiming[0]] -= point[id];
     }
     this._paipu.point = point.map((p) => p.toFixed(round ? 0 : 1));
 
-    let paipu = { jieju: this._paipu };
+    const paipu = { jieju: this._paipu };
 
-    let msg = [];
+    const msg = [];
     for (let l = 0; l < 4; l++) {
       msg[l] = JSON.parse(JSON.stringify(paipu));
     }
@@ -1296,12 +1297,12 @@ export class Game {
    * @internal
    */
   reply_zimo(): void {
-    let model = this._model;
+    const model = this._model;
 
-    let reply = this.get_reply(model.lunban);
+    const reply = this.get_reply(model.lunban);
     if ("daopai" in reply) {
       if (this.allow_pingju()) {
-        let shoupai = ["", "", "", ""];
+        const shoupai = ["", "", "", ""];
         shoupai[model.lunban] = model.shoupai[model.lunban].toString();
         return this.delay(() => this.pingju("九種九牌", shoupai), 0);
       }
@@ -1311,16 +1312,16 @@ export class Game {
         return this.delay(() => this.hule());
       }
     } else if ("gang" in reply) {
-      let replyT = reply as GangPlayerMessage | EmptyPlayerMessage;
-      if (this.get_gang_mianzi().find((m) => m == replyT.gang)) {
+      const replyT = reply as GangPlayerMessage | EmptyPlayerMessage;
+      if (this.get_gang_mianzi().find((m) => m === replyT.gang)) {
         if (this._view) this._view.say("gang", model.lunban);
         return this.delay(() => this.gang(replyT.gang));
       }
     } else if ("dapai" in reply) {
-      let replyT = reply as DapaiPlayerMessage | EmptyPlayerMessage;
-      let dapai = replyT.dapai.replace(/\*$/, "");
-      if (this.get_dapai().find((p) => p == dapai)) {
-        if (replyT.dapai.slice(-1) == "*" && this.allow_lizhi(dapai)) {
+      const replyT = reply as DapaiPlayerMessage | EmptyPlayerMessage;
+      const dapai = replyT.dapai.replace(/\*$/, "");
+      if (this.get_dapai().find((p) => p === dapai)) {
+        if (replyT.dapai.slice(-1) === "*" && this.allow_lizhi(dapai)) {
           if (this._view) this._view.say("lizhi", model.lunban);
           return this.delay(() => this.dapai(replyT.dapai));
         }
@@ -1328,7 +1329,7 @@ export class Game {
       }
     }
 
-    let p = this.get_dapai().pop();
+    const p = this.get_dapai().pop();
     this.delay(() => this.dapai(p), 0);
   }
 
@@ -1337,24 +1338,24 @@ export class Game {
    * @internal
    */
   reply_dapai(): void {
-    let model = this._model;
+    const model = this._model;
 
     for (let i = 1; i < 4; i++) {
-      let l = (model.lunban + i) % 4;
-      let reply = this.get_reply(l);
+      const l = (model.lunban + i) % 4;
+      const reply = this.get_reply(l);
       if ("hule" in reply && this.allow_hule(l)) {
-        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length)
+        if (this._rule.maxSimultaneousWin === 1 && this._hule.length)
           continue;
         if (this._view) this._view.say("rong", l);
         this._hule.push(l);
       } else {
-        let shoupai = model.shoupai[l].clone().zimo(this._dapai);
-        if (Util.xiangting(shoupai) == -1) this._neng_rong[l] = false;
+        const shoupai = model.shoupai[l].clone().zimo(this._dapai);
+        if (Util.xiangting(shoupai) === -1) this._neng_rong[l] = false;
       }
     }
-    if (this._hule.length == 3 && this._rule["maxSimultaneousWin"] == 2) {
-      let shoupai = ["", "", "", ""];
-      for (let l of this._hule) {
+    if (this._hule.length === 3 && this._rule.maxSimultaneousWin === 2) {
+      const shoupai = ["", "", "", ""];
+      for (const l of this._hule) {
         shoupai[l] = model.shoupai[l].toString();
       }
       return this.delay(() => this.pingju("三家和", shoupai));
@@ -1362,68 +1363,68 @@ export class Game {
       return this.delay(() => this.hule());
     }
 
-    if (this._dapai.substr(-1) == "*") {
+    if (this._dapai.substr(-1) === "*") {
       model.defen[model.player_id[model.lunban]] -= 1000;
       model.lizhibang++;
 
       if (
-        this._lizhi.filter((x) => x).length == 4 &&
-        this._rule["enableInterruptedGame"]
+        this._lizhi.filter((x) => x).length === 4 &&
+        this._rule.enableInterruptedGame
       ) {
-        let shoupai = model.shoupai.map((s) => s.toString());
+        const shoupai = model.shoupai.map((s) => s.toString());
         return this.delay(() => this.pingju("四家立直", shoupai));
       }
     }
 
-    if (this._diyizimo && model.lunban == 3) {
+    if (this._diyizimo && model.lunban === 3) {
       this._diyizimo = false;
       if (this._fengpai) {
         return this.delay(() => this.pingju("四風連打"), 0);
       }
     }
 
-    if (this._n_gang.reduce((x, y) => x + y) == 4) {
+    if (this._n_gang.reduce((x, y) => x + y) === 4) {
       if (
         Math.max(...this._n_gang) < 4 &&
-        this._rule["enableInterruptedGame"]
+        this._rule.enableInterruptedGame
       ) {
         return this.delay(() => this.pingju("四開槓"), 0);
       }
     }
 
     if (!model.shan.paishu) {
-      let shoupai = ["", "", "", ""];
+      const shoupai = ["", "", "", ""];
       for (let l = 0; l < 4; l++) {
-        let reply = this.get_reply(l);
+        const reply = this.get_reply(l);
         if ("daopai" in reply) shoupai[l] = reply.daopai;
       }
       return this.delay(() => this.pingju("", shoupai), 0);
     }
 
     for (let i = 1; i < 4; i++) {
-      let l = (model.lunban + i) % 4;
-      let reply = this.get_reply(l);
+      const l = (model.lunban + i) % 4;
+      const reply = this.get_reply(l);
       if ("fulou" in reply) {
-        let replyT = reply as FulouPlayerMessage | EmptyPlayerMessage;
-        let m = replyT.fulou.replace(/0/g, "5");
+        const replyT = reply as FulouPlayerMessage | EmptyPlayerMessage;
+        const m = replyT.fulou.replace(/0/g, "5");
         if (m.match(/^[mpsz](\d)\1\1\1/)) {
-          if (this.get_gang_mianzi(l).find((m) => m == replyT.fulou)) {
+          if (this.get_gang_mianzi(l).find((m) => m === replyT.fulou)) {
             if (this._view) this._view.say("gang", l);
             return this.delay(() => this.fulou(replyT.fulou));
           }
         } else if (m.match(/^[mpsz](\d)\1\1/)) {
-          if (this.get_peng_mianzi(l).find((m) => m == replyT.fulou)) {
+          if (this.get_peng_mianzi(l).find((m) => m === replyT.fulou)) {
             if (this._view) this._view.say("peng", l);
             return this.delay(() => this.fulou(replyT.fulou));
           }
         }
       }
     }
-    let l = (model.lunban + 1) % 4;
-    let reply = this.get_reply(l);
+    const l = (model.lunban + 1) % 4;
+    const reply = this.get_reply(l);
     if ("fulou" in reply) {
-      let replyT = reply as FulouPlayerMessage | EmptyPlayerMessage;
-      if (this.get_chi_mianzi(l).find((m) => m == replyT.fulou)) {
+      const replyT = reply as FulouPlayerMessage | EmptyPlayerMessage;
+      if (this.get_chi_mianzi(l).find((m) => m === replyT.fulou)) {
         if (this._view) this._view.say("chi", l);
         return this.delay(() => this.fulou(replyT.fulou));
       }
@@ -1437,21 +1438,21 @@ export class Game {
    * @internal
    */
   reply_fulou(): void {
-    let model = this._model;
+    const model = this._model;
 
     if (this._gang) {
       return this.delay(() => this.gangzimo(), 0);
     }
 
-    let reply = this.get_reply(model.lunban);
+    const reply = this.get_reply(model.lunban);
     if ("dapai" in reply) {
-      let replyT = reply as DapaiPlayerMessage | EmptyPlayerMessage;
-      if (this.get_dapai().find((p) => p == replyT.dapai)) {
+      const replyT = reply as DapaiPlayerMessage | EmptyPlayerMessage;
+      if (this.get_dapai().find((p) => p === replyT.dapai)) {
         return this.delay(() => this.dapai(replyT.dapai), 0);
       }
     }
 
-    let p = this.get_dapai().pop();
+    const p = this.get_dapai().pop();
     this.delay(() => this.dapai(p), 0);
   }
 
@@ -1460,24 +1461,24 @@ export class Game {
    * @internal
    */
   reply_gang(): void {
-    let model = this._model;
+    const model = this._model;
 
     if (this._gang.match(/^[mpsz]\d{4}$/)) {
       return this.delay(() => this.gangzimo(), 0);
     }
 
     for (let i = 1; i < 4; i++) {
-      let l = (model.lunban + i) % 4;
-      let reply = this.get_reply(l);
+      const l = (model.lunban + i) % 4;
+      const reply = this.get_reply(l);
       if ("hule" in reply && this.allow_hule(l)) {
-        if (this._rule["maxSimultaneousWin"] == 1 && this._hule.length)
+        if (this._rule.maxSimultaneousWin === 1 && this._hule.length)
           continue;
         if (this._view) this._view.say("rong", l);
         this._hule.push(l);
       } else {
-        let p = this._gang[0] + this._gang.slice(-1);
-        let shoupai = model.shoupai[l].clone().zimo(p);
-        if (Util.xiangting(shoupai) == -1) this._neng_rong[l] = false;
+        const p = this._gang[0] + this._gang.slice(-1);
+        const shoupai = model.shoupai[l].clone().zimo(p);
+        if (Util.xiangting(shoupai) === -1) this._neng_rong[l] = false;
       }
     }
     if (this._hule.length) {
@@ -1492,7 +1493,7 @@ export class Game {
    * @internal
    */
   reply_hule(): void {
-    let model = this._model;
+    const model = this._model;
 
     for (let l = 0; l < 4; l++) {
       model.defen[model.player_id[l]] += this._fenpei[l];
@@ -1513,7 +1514,7 @@ export class Game {
    * @internal
    */
   reply_pingju(): void {
-    let model = this._model;
+    const model = this._model;
 
     for (let l = 0; l < 4; l++) {
       model.defen[model.player_id[l]] += this._fenpei[l];
@@ -1529,7 +1530,7 @@ export class Game {
    * @internal
    */
   get_dapai(): Pai[] {
-    let model = this._model;
+    const model = this._model;
     return Game.get_dapai(this._rule, model.shoupai[model.lunban]);
   }
 
@@ -1540,8 +1541,8 @@ export class Game {
    * @internal
    */
   get_chi_mianzi(l: number): Menzi[] {
-    let model = this._model;
-    let d = "_+=-"[(4 + model.lunban - l) % 4];
+    const model = this._model;
+    const d = "_+=-"[(4 + model.lunban - l) % 4];
     return Game.get_chi_mianzi(
       this._rule,
       model.shoupai[l],
@@ -1557,10 +1558,9 @@ export class Game {
    * @internal
    */
   get_peng_mianzi(l: number): Menzi[] {
-    let model = this._model;
-    let d = "_+=-"[(4 + model.lunban - l) % 4];
+    const model = this._model;
+    const d = "_+=-"[(4 + model.lunban - l) % 4];
     return Game.get_peng_mianzi(
-      this._rule,
       model.shoupai[l],
       this._dapai + d,
       model.shan.paishu
@@ -1574,7 +1574,7 @@ export class Game {
    * @internal
    */
   get_gang_mianzi(l?: number | null): Menzi[] {
-    let model = this._model;
+    const model = this._model;
     if (l == null) {
       return Game.get_gang_mianzi(
         this._rule,
@@ -1584,7 +1584,7 @@ export class Game {
         this._n_gang.reduce((x, y) => x + y)
       );
     } else {
-      let d = "_+=-"[(4 + model.lunban - l) % 4];
+      const d = "_+=-"[(4 + model.lunban - l) % 4];
       return Game.get_gang_mianzi(
         this._rule,
         model.shoupai[l],
@@ -1602,7 +1602,7 @@ export class Game {
    * @internal
    */
   allow_lizhi(p?: Pai | null): Pai[] | boolean {
-    let model = this._model;
+    const model = this._model;
     return Game.allow_lizhi(
       this._rule,
       model.shoupai[model.lunban],
@@ -1621,12 +1621,12 @@ export class Game {
    * @internal
    */
   allow_hule(l?: number | null): boolean {
-    let model = this._model;
+    const model = this._model;
     if (l == null) {
-      let hupai =
+      const hupai =
         model.shoupai[model.lunban].lizhi ||
-        this._status == "gangzimo" ||
-        model.shan.paishu == 0;
+        this._status === "gangzimo" ||
+        model.shan.paishu === 0;
       return Game.allow_hule(
         this._rule,
         model.shoupai[model.lunban],
@@ -1637,14 +1637,14 @@ export class Game {
         this._neng_rong[model.lunban]
       );
     } else {
-      let p =
-        (this._status == "gang"
+      const p =
+        (this._status === "gang"
           ? this._gang[0] + this._gang.substr(-1)
           : this._dapai) + "_+=-"[(4 + model.lunban - l) % 4];
-      let hupai =
+      const hupai =
         model.shoupai[l].lizhi ||
-        this._status == "gang" ||
-        model.shan.paishu == 0;
+        this._status === "gang" ||
+        model.shan.paishu === 0;
       return Game.allow_hule(
         this._rule,
         model.shoupai[l],
@@ -1663,7 +1663,7 @@ export class Game {
    * @internal
    */
   allow_pingju(): boolean {
-    let model = this._model;
+    const model = this._model;
     return Game.allow_pingju(
       this._rule,
       model.shoupai[model.lunban],
@@ -1683,7 +1683,7 @@ export class Game {
     if (this._sync) return callback();
 
     timeout =
-      this._speed == 0
+      this._speed === 0
         ? 0
         : timeout == null
         ? Math.max(500, this._speed * 200)
@@ -1707,9 +1707,9 @@ export class Game {
    * @internal
    */
   get_reply(l: number): PlayerMessage {
-    let model = this._model;
+    const model = this._model;
     return this._reply[model.player_id[l]];
   }
 }
 
-//TODO: paipuのエラー(Yiman<string>とYiman<number>の互換)３件、shan(ShanとBoardShanの互換)のエラー5件
+// TODO: paipuのエラー(Yiman<string>とYiman<number>の互換)３件、shan(ShanとBoardShanの互換)のエラー5件

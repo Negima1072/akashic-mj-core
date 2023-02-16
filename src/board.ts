@@ -2,8 +2,9 @@
  * Mahjong.Board
  */
 
-import { BoardInfo, BoardShan } from "boardInfo";
-import {
+import type { BoardInfo} from "boardInfo";
+import { BoardShan } from "boardInfo";
+import type {
   Dapai,
   Fulou,
   Gang,
@@ -16,7 +17,7 @@ import {
   Zimo,
 } from "data";
 import { He } from "he";
-import {
+import type {
   DapaiGameMessage,
   FulouGameMessage,
   GangGameMessage,
@@ -103,7 +104,7 @@ export class Board implements BoardInfo {
     this.lizhibang = qipai.lizhibang;
     this.shan = new BoardShan(qipai.baopai);
     for (let l = 0; l < 4; l++) {
-      let paistr = qipai.shoupai[l] || "_".repeat(13);
+      const paistr = qipai.shoupai[l] || "_".repeat(13);
       this.shoupai[l] = Shoupai.fromString(paistr);
       this.he[l] = new He();
       this.player_id[l] = (this.qijia + this.jushu + l) % 4;
@@ -140,7 +141,7 @@ export class Board implements BoardInfo {
     this.lunban = dapai.l;
     this.shoupai[dapai.l].dapai(dapai.p, false);
     this.he[dapai.l].dapai(dapai.p);
-    this._lizhi = dapai.p.slice(-1) == "*";
+    this._lizhi = dapai.p.slice(-1) === "*";
   }
 
   /**
@@ -176,7 +177,7 @@ export class Board implements BoardInfo {
    * @param hule {@link Hule} (または {@link HuleGameMessage})
    */
   hule(hule: Hule["hule"] | HuleGameMessage["hule"]): void {
-    let shoupai = this.shoupai[hule.l];
+    const shoupai = this.shoupai[hule.l];
     shoupai.fromString(hule.shoupai);
     if (hule.baojia != null) shoupai.dapai(shoupai.get_dapai().pop());
     if (this._fenpei) {

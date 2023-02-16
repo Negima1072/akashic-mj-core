@@ -219,7 +219,7 @@ export interface Rule {
  * @returns ルール
  */
 export function rule(params?: Partial<Rule>): Rule {
-  let rule: Rule = {
+  const rule: Rule = {
     originPoint: 25000,
     rankPoint: ["20.0", "10.0", "-10.0", "-20.0"],
     redPai: {

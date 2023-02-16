@@ -1,8 +1,6 @@
 /** 通知メッセージ */
 
-import { Player } from "player";
-import { Game } from "game";
-import {
+import type {
   Dapai,
   Fulou,
   Gang,
@@ -16,7 +14,7 @@ import {
   Qipai,
   Zimo,
 } from "./data";
-import { Rule } from "./rule";
+import type { Rule } from "./rule";
 
 /**
  * 通知メッセージ

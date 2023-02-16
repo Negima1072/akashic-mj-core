@@ -3,11 +3,11 @@
  */
 
 import { Board } from "board";
-import { BoardInfo, BoardShan } from "boardInfo";
-import { Menzi, Pai, Paipu } from "data";
+import type { BoardShan } from "boardInfo";
+import type { Menzi, Pai, Paipu } from "data";
 import { Game } from "game";
-import { He } from "he";
-import {
+import type { He } from "he";
+import type {
   DapaiGameMessage,
   FulouGameMessage,
   GameMessage,
@@ -21,9 +21,8 @@ import {
   QipaiGameMessage,
   ZimoGameMessage,
 } from "message";
-import { Rule } from "rule";
-import { Shan } from "shan";
-import { Shoupai } from "shoupai";
+import type { Rule } from "rule";
+import type { Shoupai } from "shoupai";
 import * as Util from "./util";
 
 /**
@@ -153,7 +152,7 @@ export abstract class Player {
    * @internal
    */
   dapai(dapai: DapaiGameMessage["dapai"]): void {
-    if (dapai.l == this._menfeng) {
+    if (dapai.l === this._menfeng) {
       if (!this.shoupai.lizhi) this._neng_rong = true;
     }
 
@@ -161,13 +160,13 @@ export abstract class Player {
 
     if (this._callback) this.action_dapai(dapai);
 
-    if (dapai.l == this._menfeng) {
+    if (dapai.l === this._menfeng) {
       this._diyizimo = false;
       if (this.hulepai.find((p) => this.he.find(p))) this._neng_rong = false;
     } else {
-      let s = dapai.p[0],
+      const s = dapai.p[0],
         n = +dapai.p[1] || 5;
-      if (this.hulepai.find((p) => p == s + n)) this._neng_rong = false;
+      if (this.hulepai.find((p) => p === s + n)) this._neng_rong = false;
     }
   }
 
@@ -195,10 +194,10 @@ export abstract class Player {
     if (this._callback) this.action_gang(gang);
 
     this._diyizimo = false;
-    if (gang.l != this._menfeng && !gang.m.match(/^[mpsz]\d{4}$/)) {
-      let s = gang.m[0],
+    if (gang.l !== this._menfeng && !gang.m.match(/^[mpsz]\d{4}$/)) {
+      const s = gang.m[0],
         n = +gang.m.slice(-1) || 5;
-      if (this.hulepai.find((p) => p == s + n)) this._neng_rong = false;
+      if (this.hulepai.find((p) => p === s + n)) this._neng_rong = false;
     }
   }
 
@@ -275,7 +274,7 @@ export abstract class Player {
    */
   get hulepai(): Pai[] {
     return (
-      (Util.xiangting(this.shoupai) == 0 && Util.tingpai(this.shoupai)) || []
+      (Util.xiangting(this.shoupai) === 0 && Util.tingpai(this.shoupai)) || []
     );
   }
 
@@ -358,7 +357,7 @@ export abstract class Player {
    * @returns 和了可能なら `true` を返す。
    */
   allow_hule(shoupai: Shoupai, p?: Pai | null, hupai?: boolean): boolean {
-    hupai = hupai || shoupai.lizhi || this.shan.paishu == 0;
+    hupai = hupai || shoupai.lizhi || this.shan.paishu === 0;
     return Game.allow_hule(
       this._rule,
       shoupai,

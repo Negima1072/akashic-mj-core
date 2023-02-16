@@ -1,4 +1,4 @@
-import { Moda, Paipu } from "./data";
+import type { Moda, Paipu } from "./data";
 
 /**
  * {@link BoardInfo | 卓情報}を描画するクラス

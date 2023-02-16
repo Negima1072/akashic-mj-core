@@ -1,7 +1,6 @@
-import { Pai, Paipu } from "./data";
-import { He } from "./he";
-import { Shan } from "./shan";
-import { Shoupai } from "./shoupai";
+import type { Pai, Paipu } from "./data";
+import type { He } from "./he";
+import type { Shoupai } from "./shoupai";
 
 export class BoardShan {
   paishu: number;

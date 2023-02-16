@@ -2,8 +2,8 @@
  * Mahjong.Shan
  */
 
-import { Pai } from "data";
-import { Rule } from "rule";
+import type { Pai } from "data";
+import type { Rule } from "rule";
 import { Shoupai } from "shoupai";
 
 /**
@@ -17,9 +17,9 @@ export class Shan {
    */
   static zhenbaopai(p: Pai): Pai {
     if (!Shoupai.valid_pai(p)) throw new Error(p);
-    let s = p[0],
+    const s = p[0],
       n = +p[1] || 5;
-    return s == "z"
+    return s === "z"
       ? n < 5
         ? s + ((n % 4) + 1)
         : s + (((n - 4) % 3) + 5)
@@ -32,17 +32,17 @@ export class Shan {
    */
   constructor(rule: Rule) {
     this._rule = rule;
-    let hongpai = rule["redPai"];
+    const hongpai = rule.redPai;
 
-    let pai = [];
-    for (let s of ["m", "p", "s", "z"]) {
-      let paitstr = s as "m" | "p" | "s" | "z";
-      for (let n = 1; n <= (paitstr == "z" ? 7 : 9); n++) {
+    const pai = [];
+    for (const s of ["m", "p", "s", "z"]) {
+      const paitstr = s as "m" | "p" | "s" | "z";
+      for (let n = 1; n <= (paitstr === "z" ? 7 : 9); n++) {
         for (let i = 0; i < 4; i++) {
           if (paitstr === "z") {
             pai.push(paitstr + n);
           } else {
-            if (n == 5 && i < hongpai[paitstr]) pai.push(paitstr + 0);
+            if (n === 5 && i < hongpai[paitstr]) pai.push(paitstr + 0);
             else pai.push(paitstr + n);
           }
         }
@@ -55,7 +55,7 @@ export class Shan {
     }
 
     this._baopai = [this._pai[4]];
-    this._fubaopai = rule["enableUradora"] ? [this._pai[9]] : null;
+    this._fubaopai = rule.enableUradora ? [this._pai[9]] : null;
     this._weikaigang = false;
     this._closed = false;
   }
@@ -102,7 +102,7 @@ export class Shan {
    */
   zimo(): Pai {
     if (this._closed) throw new Error(this.toString());
-    if (this.paishu == 0) throw new Error(this.toString());
+    if (this.paishu === 0) throw new Error(this.toString());
     if (this._weikaigang) throw new Error(this.toString());
     return this._pai.pop();
   }
@@ -114,10 +114,10 @@ export class Shan {
    */
   gangzimo(): Pai {
     if (this._closed) throw new Error(this.toString());
-    if (this.paishu == 0) throw new Error(this.toString());
+    if (this.paishu === 0) throw new Error(this.toString());
     if (this._weikaigang) throw new Error(this.toString());
-    if (this._baopai.length == 5) throw new Error(this.toString());
-    this._weikaigang = this._rule["enableKandora"];
+    if (this._baopai.length === 5) throw new Error(this.toString());
+    this._weikaigang = this._rule.enableKandora;
     if (!this._weikaigang) this._baopai.push("");
     return this._pai.shift();
   }
@@ -131,7 +131,7 @@ export class Shan {
     if (this._closed) throw new Error(this.toString());
     if (!this._weikaigang) throw new Error(this.toString());
     this._baopai.push(this._pai[4]);
-    if (this._fubaopai && this._rule["enableKanUra"])
+    if (this._fubaopai && this._rule.enableKanUra)
       this._fubaopai.push(this._pai[9]);
     this._weikaigang = false;
     return this;
