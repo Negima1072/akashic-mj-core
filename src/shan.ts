@@ -51,7 +51,7 @@ export class Shan {
 
     this._pai = [];
     while (pai.length) {
-      this._pai.push(pai.splice(g.game.random.generate() * pai.length, 1)[0]);
+      this._pai.push(pai.splice((g.game ? g.game.random.generate() : Math.random()) * pai.length, 1)[0]);
     }
 
     this._baopai = [this._pai[4]];

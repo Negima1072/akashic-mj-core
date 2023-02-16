@@ -493,7 +493,7 @@ export class Game {
    * @param qijia 起家を指定すること(`0`〜`3`)。指定しない場合はランダムに起家を決定する。
    */
   kaiju(qijia?: number): void {
-    this._model.qijia = qijia ?? Math.floor(g.game.random.generate() * 4);
+    this._model.qijia = qijia ?? Math.floor((g.game ? g.game.random.generate() : Math.random()) * 4);
 
     this._max_jushu =
       this._rule.gameCount === 0 ? 0 : this._rule.gameCount * 4 - 1;

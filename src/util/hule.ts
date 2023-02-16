@@ -221,7 +221,7 @@ function mianzi_all(shoupai: Shoupai): Hulexing[] {
 }
 
 function add_hulepai(mianzi: Hulexing, p: Pai): Hulexing[] {
-  const [s, n, d] = p;
+  const s = p[0], n = p[1], d = p[2];
   const regexp = new RegExp(`^(${s}.*${n})`);
   const replacer = `$1${d}!`;
 
