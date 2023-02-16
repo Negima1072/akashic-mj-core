@@ -5,7 +5,7 @@
 import type { Pai } from "data";
 import type { Bingpai, Shoupai } from "shoupai";
 
-function _xiangting(m: number, d: number, g: number, j?: boolean) {
+function _xiangting(m: number, d: number, g: number, j?: boolean): number {
   const n = j ? 4 : 5;
   if (m > 4) {
     d += m - 4;
@@ -34,7 +34,7 @@ function dazi(bingpai: number[]): Dazi {
 
   for (let n = 1; n <= 9; n++) {
     n_pai += bingpai[n];
-    if (n <= 7 && bingpai[n + 1] == 0 && bingpai[n + 2] == 0) {
+    if (n <= 7 && bingpai[n + 1] === 0 && bingpai[n + 2] === 0) {
       n_dazi += n_pai >> 1;
       n_guli += n_pai % 2;
       n_pai = 0;
@@ -46,7 +46,7 @@ function dazi(bingpai: number[]): Dazi {
   return { a: [0, n_dazi, n_guli], b: [0, n_dazi, n_guli] };
 }
 
-function mianzi(bingpai: number[], n = 1): Dazi {
+function mianzi(bingpai: number[], n: number = 1): Dazi {
   if (n > 9) return dazi(bingpai);
 
   const max = mianzi(bingpai, n + 1);
@@ -61,9 +61,9 @@ function mianzi(bingpai: number[], n = 1): Dazi {
     bingpai[n + 2]++;
     r.a[0]++;
     r.b[0]++;
-    if (r.a[2] < max.a[2] || (r.a[2] == max.a[2] && r.a[1] < max.a[1]))
+    if (r.a[2] < max.a[2] || (r.a[2] === max.a[2] && r.a[1] < max.a[1]))
       max.a = r.a;
-    if (r.b[0] > max.b[0] || (r.b[0] == max.b[0] && r.b[1] > max.b[1]))
+    if (r.b[0] > max.b[0] || (r.b[0] === max.b[0] && r.b[1] > max.b[1]))
       max.b = r.b;
   }
 
@@ -73,16 +73,16 @@ function mianzi(bingpai: number[], n = 1): Dazi {
     bingpai[n] += 3;
     r.a[0]++;
     r.b[0]++;
-    if (r.a[2] < max.a[2] || (r.a[2] == max.a[2] && r.a[1] < max.a[1]))
+    if (r.a[2] < max.a[2] || (r.a[2] === max.a[2] && r.a[1] < max.a[1]))
       max.a = r.a;
-    if (r.b[0] > max.b[0] || (r.b[0] == max.b[0] && r.b[1] > max.b[1]))
+    if (r.b[0] > max.b[0] || (r.b[0] === max.b[0] && r.b[1] > max.b[1]))
       max.b = r.b;
   }
 
   return max;
 }
 
-function mianzi_all(shoupai: Shoupai, jiangpai?: boolean) {
+function mianzi_all(shoupai: Shoupai, jiangpai?: boolean): number {
   const r = {
     m: mianzi(shoupai._bingpai.m),
     p: mianzi(shoupai._bingpai.p),
@@ -92,8 +92,8 @@ function mianzi_all(shoupai: Shoupai, jiangpai?: boolean) {
   const z = [0, 0, 0];
   for (let n = 1; n <= 7; n++) {
     if (shoupai._bingpai.z[n] >= 3) z[0]++;
-    else if (shoupai._bingpai.z[n] == 2) z[1]++;
-    else if (shoupai._bingpai.z[n] == 1) z[2]++;
+    else if (shoupai._bingpai.z[n] === 2) z[1]++;
+    else if (shoupai._bingpai.z[n] === 1) z[2]++;
   }
 
   const n_fulou = shoupai._fulou.length;
@@ -144,7 +144,7 @@ export function xiangting_yiban(shoupai: Shoupai): number {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] >= 2) {
@@ -156,7 +156,7 @@ export function xiangting_yiban(shoupai: Shoupai): number {
       }
     }
   }
-  if (min == -1 && shoupai._zimo && shoupai._zimo.length > 2) return 0;
+  if (min === -1 && shoupai._zimo && shoupai._zimo.length > 2) return 0;
 
   return min;
 }
@@ -174,11 +174,11 @@ export function xiangting_qidui(shoupai: Shoupai): number {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] >= 2) n_duizi++;
-        else if (bingpai[n] == 1) n_guli++;
+        else if (bingpai[n] === 1) n_guli++;
       }
     }
   }
@@ -202,9 +202,9 @@ export function xiangting_guoshi(shoupai: Shoupai): number {
 
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
-      const nn = paitstr == "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
+      const nn = paitstr === "z" ? [1, 2, 3, 4, 5, 6, 7] : [1, 9];
       for (const n of nn) {
         if (bingpai[n] >= 1) n_yaojiu++;
         if (bingpai[n] >= 2) n_duizi++;
@@ -232,7 +232,7 @@ export function tingpai(
   const n_xiangting = f_xiangting(shoupai);
   for (const s of ["m", "p", "s", "z"]) {
     const paitstr = s as keyof Bingpai;
-    if (paitstr != "_") {
+    if (paitstr !== "_") {
       const bingpai = shoupai._bingpai[paitstr];
       for (let n = 1; n < bingpai.length; n++) {
         if (bingpai[n] >= 4) continue;
